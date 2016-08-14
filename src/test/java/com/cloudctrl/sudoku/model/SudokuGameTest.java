@@ -9,7 +9,11 @@ public class SudokuGameTest extends TestCase {
 
     public void testCreateStandardGame() {
 
-        SudokuBoardBuilder builder = new SudokuBoardBuilder();
+        SudokuGameBuilder builder = new SudokuGameBuilder();
+        builder.fix(2, 1, 7);
+        builder.fix(5,1, 4);
+
+
 
     }
 }
