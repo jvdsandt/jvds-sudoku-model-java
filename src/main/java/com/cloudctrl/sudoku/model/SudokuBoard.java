@@ -1,5 +1,7 @@
 package com.cloudctrl.sudoku.model;
 
+import java.util.Arrays;
+
 /**
  * Created by Jan on 14-8-2016.
  */
@@ -11,8 +13,8 @@ public class SudokuBoard {
 
     public SudokuBoard(SudokuBox[] boxes) {
         this.boxes = boxes;
-        maxX = SudokuUtils.max(boxes, (SudokuBox o1, SudokuBox o2) -> o1.maxX() - o2.maxX()).maxX();
-        maxY = SudokuUtils.max(boxes, (SudokuBox o1, SudokuBox o2) -> o1.maxY() - o2.maxY()).maxY();
+        maxX = Arrays.stream(boxes).mapToInt(b -> b.maxX()).max().getAsInt();
+        maxY = Arrays.stream(boxes).mapToInt(b -> b.maxY()).max().getAsInt();
     }
 
     public SudokuBox[] getBoxes() {
