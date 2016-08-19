@@ -36,6 +36,12 @@ public class SudokuGameTest extends TestCase {
         } catch (IllegalArgumentException ex) {
             // ok
         }
+        try {
+            builder.fix(10, 1, 7);
+            fail("Illegal argument expected");
+        } catch (IllegalArgumentException ex) {
+            // ok
+        }
         builder.fix(2, 1, 7);
     }
 }

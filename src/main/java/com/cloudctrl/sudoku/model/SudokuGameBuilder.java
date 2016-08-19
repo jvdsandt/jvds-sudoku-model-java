@@ -32,6 +32,9 @@ public class SudokuGameBuilder {
                 throw new IllegalArgumentException("Cell already set to other value");
             }
         }
+        if (!board.includes(cell)) {
+            throw new IllegalArgumentException("Cell not part of board");
+        }
         if (!board.canAdd(cell, value, fixedCells)) {
             throw new IllegalArgumentException("Cell creates invalid box");
         }
@@ -39,7 +42,7 @@ public class SudokuGameBuilder {
     }
 
     public void fix(int xpos, int ypos, int value) {
-        this.fix( new SudokuCell(xpos, ypos), value);
+        this.fix(new SudokuCell(xpos, ypos), value);
     }
 
     public SudokuGame newGame() {

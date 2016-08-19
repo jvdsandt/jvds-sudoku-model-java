@@ -22,6 +22,15 @@ public class SudokuBoard {
         return boxes;
     }
 
+    public boolean includes(SudokuCell cell) {
+        for (SudokuBox box : boxes) {
+            if (box.includes(cell)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean canAdd(SudokuCell cell, int value, Map<SudokuCell, Integer> fixedCells) {
         for(int i = 0; i < boxes.length; i++) {
            if (!boxes[i].canAdd(cell, value, fixedCells)) {
