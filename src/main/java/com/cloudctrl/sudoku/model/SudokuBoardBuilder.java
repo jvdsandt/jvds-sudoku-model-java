@@ -22,14 +22,7 @@ public class SudokuBoardBuilder {
         if ((toCell.x() - fromCell.x() + 1) * (toCell.y() - fromCell.y() + 1) != 9) {
             throw new RuntimeException("Invalid box");
         }
-
-        List<SudokuCell> cells = new ArrayList<>(9);
-        for (int y = fromCell.y(); y <= toCell.y(); y++) {
-            for (int x = fromCell.x(); x <= toCell.x(); x++) {
-                cells.add(new SudokuCell(x, y));
-            }
-        }
-        boxes.add(new SudokuBox(aName, cells.toArray(new SudokuCell[9])));
+        boxes.add(new SudokuBox(aName, fromCell, toCell));
     }
 
     public void initStandard(int maxX, int maxY) {

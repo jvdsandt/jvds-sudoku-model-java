@@ -1,6 +1,7 @@
 package com.cloudctrl.sudoku.model;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Created by Jan on 14-8-2016.
@@ -19,6 +20,15 @@ public class SudokuBoard {
 
     public SudokuBox[] getBoxes() {
         return boxes;
+    }
+
+    public boolean canAdd(SudokuCell cell, int value, Map<SudokuCell, Integer> fixedCells) {
+        for(int i = 0; i < boxes.length; i++) {
+           if (!boxes[i].canAdd(cell, value, fixedCells)) {
+               return false;
+           }
+        }
+        return true;
     }
 
     public int maxX() {

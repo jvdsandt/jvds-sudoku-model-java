@@ -16,7 +16,7 @@ public class SudokuGameBuilder {
     }
 
     public SudokuGameBuilder(SudokuBoard board) {
-        board = board;
+        this.board = board;
         this.reset();
     }
 
@@ -25,11 +25,25 @@ public class SudokuGameBuilder {
     }
 
     public void fix(SudokuCell cell, int value) {
+        if (fixedCells.containsKey(cell)) {
+            if (fixedCells.get(cell) == value) {
+                return;
+            } else {
+                throw new IllegalArgumentException("Cell already set to other value");
+            }
+        }
+        if (!board.canAdd(cell, value, fixedCells)) {
+            throw new IllegalArgumentException("Cell creates invalid box");
+        }
         fixedCells.put(cell, value);
     }
 
     public void fix(int xpos, int ypos, int value) {
         this.fix( new SudokuCell(xpos, ypos), value);
+    }
+
+    public SudokuGame newGame() {
+        return new SudokuGame(board, new HashMap(fixedCells));
     }
 
 }
