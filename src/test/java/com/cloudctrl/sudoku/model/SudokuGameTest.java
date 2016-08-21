@@ -2,6 +2,9 @@ package com.cloudctrl.sudoku.model;
 
 import junit.framework.TestCase;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Created by Jan on 14-8-2016.
  */
@@ -43,5 +46,11 @@ public class SudokuGameTest extends TestCase {
             // ok
         }
         builder.fix(2, 1, 7);
+    }
+
+    public void testCreateSimpleGame() {
+        SudokuGame game = SudokuGames.SIMPLE_GAME;
+        Map<SudokuCell, Set<Integer>> openCellValues = game.findOpenCellValues();
+
     }
 }
