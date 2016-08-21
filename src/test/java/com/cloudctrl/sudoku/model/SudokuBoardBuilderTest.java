@@ -11,7 +11,7 @@ public class SudokuBoardBuilderTest extends TestCase {
 
     public void testDefault9x9() {
         SudokuBoard board = SudokuBoardBuilder.default9x9();
-        assertEquals(27, board.getBoxes().length);
+        assertEquals(27, board.getBoxes().size());
         assertEquals(9, board.maxX());
         assertEquals(9, board.maxY());
     }

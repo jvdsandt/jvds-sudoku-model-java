@@ -1,9 +1,9 @@
 package com.cloudctrl.sudoku.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.ImmutableSet;
+
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Created by Jan on 14-8-2016.
@@ -11,9 +11,9 @@ import java.util.Map;
 public class SudokuBox {
 
     private String name;
-    private SudokuCell[] cells;
+    private ImmutableSet<SudokuCell> cells;
 
-    public SudokuBox(String name, SudokuCell[] cells) {
+    public SudokuBox(String name, ImmutableSet<SudokuCell> cells) {
         this.name = name;
         this.cells = cells;
     }
@@ -23,15 +23,19 @@ public class SudokuBox {
     }
 
     public int maxX() {
-        return Arrays.stream(cells).mapToInt(cell -> cell.x()).max().getAsInt();
+        return cells.stream().mapToInt(cell -> cell.x()).max().getAsInt();
     }
 
     public int maxY() {
-        return Arrays.stream(cells).mapToInt(cell -> cell.y()).max().getAsInt();
+        return cells.stream().mapToInt(cell -> cell.y()).max().getAsInt();
+    }
+
+    public Collection<SudokuCell> getCells() {
+        return cells;
     }
 
     public boolean includes(SudokuCell aCell) {
-        return Arrays.asList(cells).contains(aCell);
+        return cells.contains(aCell);
     }
 
     public boolean canAdd(SudokuCell cell, int value, Map<SudokuCell, Integer> fixedCells) {
@@ -46,13 +50,21 @@ public class SudokuBox {
         return true;
     }
 
-    private static SudokuCell[] createCells(SudokuCell minCell, SudokuCell maxCell) {
-        List<SudokuCell> cells = new ArrayList<>(9);
+    private static ImmutableSet<SudokuCell> createCells(SudokuCell minCell, SudokuCell maxCell) {
+        ImmutableSet.Builder<SudokuCell> builder = ImmutableSet.<SudokuCell>builder();
         for (int ypos = minCell.y(); ypos <= maxCell.y(); ypos++) {
             for (int xpos = minCell.x(); xpos <= maxCell.x(); xpos++) {
-                cells.add(new SudokuCell(xpos, ypos));
+                builder.add(new SudokuCell(xpos, ypos));
             }
         }
-        return cells.toArray(new SudokuCell[cells.size()]);
+        return builder.build();
+    }
+
+    public void forCells(Collection<SudokuCell> skipList, Consumer<SudokuCell> action) {
+        cells.stream().forEach((c) -> {
+            if (!(skipList.contains(c))) {
+                action.accept(c);
+            }
+        });
     }
 }

@@ -46,7 +46,7 @@ public class SudokuGameBuilder {
     }
 
     public SudokuGame newGame() {
-        return new SudokuGame(board, new HashMap(fixedCells));
+        return new SudokuGame(board, fixedCells);
     }
 
 }

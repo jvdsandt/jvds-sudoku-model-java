@@ -42,6 +42,6 @@ public class SudokuBoardBuilder {
     }
 
     public SudokuBoard newBoard() {
-        return new SudokuBoard(boxes.toArray(new SudokuBox[boxes.size()]));
+        return new SudokuBoard(boxes);
     }
 }
