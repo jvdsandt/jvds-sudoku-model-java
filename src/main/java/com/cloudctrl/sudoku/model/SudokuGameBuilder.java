@@ -49,4 +49,15 @@ public class SudokuGameBuilder {
         return new SudokuGame(board, fixedCells);
     }
 
+    public void initFromArray(int[][] cells) {
+        reset();
+        for (int ypos = 0; ypos < cells.length; ypos++) {
+            for (int xpos = 0; xpos < cells[ypos].length; xpos++) {
+                if (cells[ypos][xpos] > 0) {
+                    fix(xpos+1, ypos+1, cells[ypos][xpos]);
+                }
+            }
+        }
+    }
+
 }

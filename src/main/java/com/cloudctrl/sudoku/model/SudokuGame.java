@@ -17,6 +17,12 @@ public class SudokuGame {
     private SudokuBoard board;
     private Map<SudokuCell, Integer> fixedCells;
 
+    public static SudokuGame fromArray(int[][] cells) {
+        SudokuGameBuilder builder = new SudokuGameBuilder();
+        builder.initFromArray(cells);
+        return builder.newGame();
+    }
+
     public SudokuGame(SudokuBoard board, Map<SudokuCell, Integer> fixedCells) {
         this.board = board;
         this.fixedCells = ImmutableMap.copyOf(fixedCells);
