@@ -1,8 +1,13 @@
 package com.cloudctrl.sudoku.model;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by jan on 16-08-16.
@@ -24,7 +29,8 @@ public class SudokuGame {
         return valueAt(new SudokuCell(xpos, ypos));
     }
 
-    public Map<SudokuCell, Integer> valuesFor(Collection<SudokuCell> cells) {
+    public Map<SudokuCell, Integer> valuesFor(Collection
+                                                      <SudokuCell> cells) {
         ImmutableMap.Builder b = ImmutableMap.<SudokuCell, Integer>builder();
         cells.stream().forEach((c) -> {
             int value = valueAt(c);
@@ -36,10 +42,10 @@ public class SudokuGame {
     }
 
     public Map<SudokuCell, Set<Integer>> findOpenCellValues() {
-        Map<SudokuCell, Set<Integer>> cellOptions = new HashMap();
+        Map<SudokuCell, Set<Integer>> cellOptions = new HashMap<>();
         board.forBoxes((eachBox) -> {
             Map<SudokuCell, Integer> filledCells = valuesFor(eachBox.getCells());
-            Set<Integer> openValues = new HashSet<Integer>(board.allValues());
+            Set<Integer> openValues = new HashSet<>(board.allValues());
             openValues.removeAll(filledCells.values());
             eachBox.forCells(filledCells.keySet(), (eachOpenCell) -> {
                 Set<Integer> possibleValues = Sets.intersection(
