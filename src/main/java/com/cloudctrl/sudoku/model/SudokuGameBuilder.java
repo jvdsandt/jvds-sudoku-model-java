@@ -11,6 +11,16 @@ public class SudokuGameBuilder {
     private SudokuBoard board;
     private Map<SudokuCell, Integer> fixedCells;
 
+    public static SudokuGame newGameFromNumberLine(String numberLine) {
+        SudokuBoard board = SudokuBoardBuilder.default9x9();
+        if (numberLine.length() < board.maxX() * board.maxY()) {
+            throw new IllegalArgumentException("Not enough numbers provided");
+        }
+        SudokuGameBuilder builder = new SudokuGameBuilder(board);
+        builder.initFromNumberLine(numberLine);
+        return builder.newGame();
+    }
+
     public SudokuGameBuilder() {
         this(SudokuBoardBuilder.default9x9());
     }
@@ -55,6 +65,20 @@ public class SudokuGameBuilder {
             for (int xpos = 0; xpos < cells[ypos].length; xpos++) {
                 if (cells[ypos][xpos] > 0) {
                     fix(xpos+1, ypos+1, cells[ypos][xpos]);
+                }
+            }
+        }
+    }
+
+    public void initFromNumberLine(String numberLine) {
+        for (int y = 0; y < board.maxY(); y++) {
+            for (int x = 0; x < board.maxX(); x++) {
+                char value = numberLine.charAt((y * board.maxX()) + x);
+                if (value < '0' || value > '9') {
+                    throw new IllegalArgumentException("Invalid cell value");
+                }
+                if (value != '0') {
+                    fix(x + 1, y + 1, Character.digit(value, 10));
                 }
             }
         }
