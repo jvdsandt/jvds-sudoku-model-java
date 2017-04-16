@@ -1,5 +1,7 @@
 package com.cloudctrl.sudoku.model;
 
+import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
+import com.google.common.collect.ImmutableSet;
 import junit.framework.TestCase;
 
 import java.util.Map;
@@ -53,4 +55,13 @@ public class SudokuGameTest extends TestCase {
         Map<SudokuCell, Set<Integer>> openCellValues = game.findOpenCellValues();
 
     }
+
+    public void testPossibleValues() {
+
+        SudokuGame game = SudokuGames.SIMPLE_GAME;
+
+        assertEquals(ImmutableSet.of(3, 4, 5), game.getOptionsPerCell(new SudokuCell(1, 1)));
+        assertEquals(ImmutableSet.of(2, 5, 9), game.getOptionsPerCell(new SudokuCell(9, 9)));
+    }
+
 }

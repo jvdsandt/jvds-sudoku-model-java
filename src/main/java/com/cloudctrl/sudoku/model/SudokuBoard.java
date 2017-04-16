@@ -5,9 +5,12 @@ import com.google.common.collect.ImmutableSet;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import static java.lang.System.in;
 
 /**
  * Created by Jan on 14-8-2016.
@@ -58,4 +61,36 @@ public class SudokuBoard {
     public void forBoxes(Consumer<SudokuBox> action) {
         boxes.stream().forEach(action);
     }
+
+    public void forBoxes(SudokuCell cell, Consumer<SudokuBox> action) {
+        boxes.stream().
+                filter((eachBox) -> eachBox.getCells().contains(cell)).
+                forEach(action);
+    }
+
+    /*
+        relevantCellsDo: aBlock
+     */
+    public void forRelevantCells(Consumer<SudokuCell> action) {
+        Set<SudokuCell> cellSet = new HashSet<>();
+        forBoxes((eachBox) -> {
+            eachBox.getCells().forEach((eachCell) -> {
+                if (!cellSet.contains(eachCell)) {
+                    action.accept(eachCell);
+                    cellSet.add(eachCell);
+                }
+            });
+        });
+    }
+
+    public Set<Integer> possibleValues(SudokuCell cell, SudokuGameBase game) {
+        Set<Integer> values = ALL_VALUES;
+        for(SudokuBox eachBox : boxes) {
+            if (eachBox.getCells().contains(cell)) {
+                values = eachBox.possibleValues(cell, values, game);
+            }
+        }
+        return values;
+    }
+
 }

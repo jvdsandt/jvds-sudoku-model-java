@@ -1,5 +1,6 @@
 package com.cloudctrl.sudoku.model;
 
+import com.cloudctrl.sudoku.model.builder.SudokuBoardBuilder;
 import junit.framework.TestCase;
 
 import java.util.Collections;

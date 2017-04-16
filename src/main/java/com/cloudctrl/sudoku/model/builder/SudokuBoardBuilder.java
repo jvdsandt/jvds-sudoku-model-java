@@ -1,8 +1,12 @@
-package com.cloudctrl.sudoku.model;
+package com.cloudctrl.sudoku.model.builder;
 
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.cloudctrl.sudoku.model.SudokuBoard;
+import com.cloudctrl.sudoku.model.SudokuBox;
+import com.cloudctrl.sudoku.model.SudokuCell;
 
 /**
  * Created by Jan on 14-8-2016.

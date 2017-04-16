@@ -1,7 +1,11 @@
-package com.cloudctrl.sudoku.model;
+package com.cloudctrl.sudoku.model.builder;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.cloudctrl.sudoku.model.SudokuBoard;
+import com.cloudctrl.sudoku.model.SudokuCell;
+import com.cloudctrl.sudoku.model.SudokuGame;
 
 /**
  * Created by Jan on 14-8-2016.

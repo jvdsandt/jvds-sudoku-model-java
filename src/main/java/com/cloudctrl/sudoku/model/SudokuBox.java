@@ -1,5 +1,7 @@
 package com.cloudctrl.sudoku.model;
 
+import javax.sound.midi.Soundbank;
+
 import com.google.common.collect.ImmutableSet;
 
 import java.util.*;
@@ -66,5 +68,15 @@ public class SudokuBox {
                 action.accept(c);
             }
         });
+    }
+
+    public Set<Integer> possibleValues(SudokuCell aCell, Set<Integer> values, SudokuGameBase game) {
+        Set<Integer> result = new HashSet<>(values);
+        cells.forEach((eachCell) -> {
+            if (eachCell != aCell) {
+                game.valueIfKnown(eachCell, (value) -> { result.remove(value); });
+            }
+        });
+        return result;
     }
 }
