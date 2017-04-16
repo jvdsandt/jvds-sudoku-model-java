@@ -30,6 +30,12 @@ public class SudokuGame extends SudokuGameBase {
         this.fixedCells = ImmutableMap.copyOf(fixedCells);
     }
 
+    @Override
+    public SudokuGame getGame() { return this; }
+
+    @Override
+    public SudokuBoard getBoard() { return board; }
+
     public int valueAt(SudokuCell cell) {
         return fixedCells.getOrDefault(cell, -1);
     }

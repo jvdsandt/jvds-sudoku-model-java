@@ -83,6 +83,20 @@ public class SudokuBoard {
         });
     }
 
+    public Set<SudokuCell> cellsSharingBox(SudokuCell cell) {
+        Set<SudokuCell> cellsSet = new HashSet<>();
+        boxes.forEach((eachBox) -> {
+            if (eachBox.includes(cell)) {
+                eachBox.getCells().forEach((eachCell) -> {
+                    if (eachCell != cell && !(cellsSet.contains(eachCell))) {
+                        cellsSet.add(eachCell);
+                    }
+                });
+            }
+        });
+        return cellsSet;
+    }
+
     public Set<Integer> possibleValues(SudokuCell cell, SudokuGameBase game) {
         Set<Integer> values = ALL_VALUES;
         for(SudokuBox eachBox : boxes) {

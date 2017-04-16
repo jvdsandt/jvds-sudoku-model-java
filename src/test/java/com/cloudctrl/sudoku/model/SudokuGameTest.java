@@ -56,7 +56,7 @@ public class SudokuGameTest extends TestCase {
 
     }
 
-    public void testPossibleValues() {
+    public void testOptionsPerCell() {
 
         SudokuGame game = SudokuGames.SIMPLE_GAME;
 

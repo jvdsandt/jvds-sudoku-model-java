@@ -1,5 +1,6 @@
 package com.cloudctrl.sudoku.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,14 @@ public abstract class SudokuGameBase {
         return getOptionsPerCell().get(aCell);
     }
 
+    public Map<SudokuCell, Integer> solvedCells() {
+        return Collections.EMPTY_MAP;
+    }
+
+    public abstract SudokuGame getGame();
+
+    public SudokuBoard getBoard() { return getGame().getBoard(); }
+
     public abstract int valueAt(SudokuCell cell);
 
     public int valueAt(int xpos, int ypos) {
@@ -31,6 +40,16 @@ public abstract class SudokuGameBase {
         if (val != -1) {
             action.accept(val);
         }
+    }
+
+    public SudokuMove getFirstSingleOption() {
+        for(SudokuCell eachCell : getOptionsPerCell().keySet()) {
+            Set<Integer> values = getOptionsPerCell().get(eachCell);
+            if (values.size() == 1) {
+                return new SudokuMove(eachCell, values.iterator().next());
+            }
+        }
+        return null;
     }
 
 }

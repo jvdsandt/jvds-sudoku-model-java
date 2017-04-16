@@ -1,7 +1,5 @@
 package com.cloudctrl.sudoku.model;
 
-import javax.sound.midi.Soundbank;
-
 import com.google.common.collect.ImmutableSet;
 
 import java.util.*;
@@ -78,5 +76,28 @@ public class SudokuBox {
             }
         });
         return result;
+    }
+
+    public SudokuMove findMove(Map<SudokuCell, Set<Integer>> options) {
+        Map<Integer, Set<SudokuCell>> cellsPerValue = new HashMap<>();
+        for (SudokuCell eachCell : cells) {
+            Set<Integer> values =
+                    options.getOrDefault(eachCell, Collections.emptySet());
+            for (Integer value : values) {
+                if (cellsPerValue.containsKey(value)) {
+                    cellsPerValue.get(value).add(eachCell);
+                } else {
+                    Set<SudokuCell> cells = new HashSet<>();
+                    cells.add(eachCell);
+                    cellsPerValue.put(value, cells);
+                }
+            }
+        }
+        for (Map.Entry<Integer, Set<SudokuCell>> entry : cellsPerValue.entrySet()) {
+            if (entry.getValue().size() == 1) {
+                return new SudokuMove(entry.getValue().iterator().next(), entry.getKey());
+            }
+        }
+        return null;
     }
 }
