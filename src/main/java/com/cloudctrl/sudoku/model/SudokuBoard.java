@@ -34,12 +34,7 @@ public class SudokuBoard {
     }
 
     public boolean includes(SudokuCell cell) {
-        for (SudokuBox box : boxes) {
-            if (box.includes(cell)) {
-                return true;
-            }
-        }
-        return false;
+        return boxes.stream().anyMatch((box) -> box.includes(cell));
     }
 
     public boolean canAdd(SudokuCell cell, int value, Map<SudokuCell, Integer> fixedCells) {
