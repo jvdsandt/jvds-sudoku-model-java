@@ -1,16 +1,14 @@
 package com.cloudctrl.sudoku.model;
 
-import com.sun.istack.internal.NotNull;
-
 /**
- * Created by jan on 16-04-17.
+ * Data class that represents a Move.
  */
 public class SudokuMove {
 
     private SudokuCell cell;
     private int value;
 
-    SudokuMove(@NotNull SudokuCell cell, int value) {
+    SudokuMove(SudokuCell cell, int value) {
         this.cell = cell;
         this.value = value;
     }
