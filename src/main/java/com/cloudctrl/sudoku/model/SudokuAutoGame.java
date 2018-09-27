@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
  * Created by jan on 16-04-17.
  */
@@ -29,15 +31,15 @@ public class SudokuAutoGame extends SudokuGamePlay {
         return new SudokuAutoGame(prevGame, move, guessed, options);
     }
 
-    public static SudokuAutoGame newFromInvalid(SudokuGameBase prevGame, SudokuMove invalidMode) {
+    public static SudokuAutoGame newFromInvalid(SudokuGameBase prevGame, SudokuMove invalidMove) {
 
         Map<SudokuCell, Set<Integer>> options = new HashMap<>(prevGame.getOptionsPerCell());
         options.put(
-                invalidMode.getCell(),
-                CollUtils.copyWithout(options.get(invalidMode.getCell()), invalidMode.getValue())
+                invalidMove.getCell(),
+                CollUtils.copyWithout(options.get(invalidMove.getCell()), invalidMove.getValue())
         );
 
-        return new SudokuAutoGame(prevGame, invalidMode, false, options);
+        return new SudokuAutoGame(prevGame, invalidMove, false, options);
     }
 
     public SudokuAutoGame(SudokuGameBase prevGame, SudokuMove move, boolean guessed, Map<SudokuCell, Set<Integer>> options) {
