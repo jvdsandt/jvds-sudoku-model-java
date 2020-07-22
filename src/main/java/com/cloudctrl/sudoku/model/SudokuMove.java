@@ -5,8 +5,8 @@ package com.cloudctrl.sudoku.model;
  */
 public class SudokuMove {
 
-    private SudokuCell cell;
-    private int value;
+    private final SudokuCell cell;
+    private final int value;
 
     SudokuMove(SudokuCell cell, int value) {
         this.cell = cell;

@@ -25,6 +25,6 @@ public class SudokuBoardBuilderTest extends TestCase {
 
     public void testCanAdd() {
         SudokuBoard board = SudokuBoardBuilder.default9x9();
-        board.canAdd(new SudokuCell(9, 9), 5, Collections.EMPTY_MAP);
+        board.canAdd(new SudokuCell(9, 9), 5, Collections.emptyMap());
     }
 }

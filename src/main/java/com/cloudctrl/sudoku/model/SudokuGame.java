@@ -16,8 +16,8 @@ import java.util.function.Consumer;
  */
 public class SudokuGame extends SudokuGameBase {
 
-    private SudokuBoard board;
-    private Map<SudokuCell, Integer> fixedCells;
+    private final SudokuBoard board;
+    private final Map<SudokuCell, Integer> fixedCells;
 
     public static SudokuGame fromArray(int[][] cells) {
         SudokuGameBuilder builder = new SudokuGameBuilder();
@@ -40,9 +40,8 @@ public class SudokuGame extends SudokuGameBase {
         return fixedCells.getOrDefault(cell, -1);
     }
 
-    public Map<SudokuCell, Integer> valuesFor(Collection
-                                                      <SudokuCell> cells) {
-        ImmutableMap.Builder b = ImmutableMap.<SudokuCell, Integer>builder();
+    public Map<SudokuCell, Integer> valuesFor(Collection<SudokuCell> cells) {
+        var b = new ImmutableMap.Builder<SudokuCell, Integer>();
         cells.stream().forEach((c) -> {
             int value = valueAt(c);
             if (value != -1) {

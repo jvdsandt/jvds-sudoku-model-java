@@ -5,8 +5,8 @@ package com.cloudctrl.sudoku.model;
  */
 public class SudokuCell {
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public SudokuCell(int theX, int theY) {
         if (theX < 1 || theY < 1){

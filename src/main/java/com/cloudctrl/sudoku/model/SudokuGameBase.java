@@ -22,7 +22,7 @@ public abstract class SudokuGameBase {
     }
 
     public Map<SudokuCell, Integer> solvedCells() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     public abstract SudokuGame getGame();
@@ -44,7 +44,7 @@ public abstract class SudokuGameBase {
 
     public SudokuMove getFirstSingleOption() {
         for(SudokuCell eachCell : getOptionsPerCell().keySet()) {
-            Set<Integer> values = getOptionsPerCell().get(eachCell);
+            var values = getOptionsPerCell().get(eachCell);
             if (values.size() == 1) {
                 return new SudokuMove(eachCell, values.iterator().next());
             }

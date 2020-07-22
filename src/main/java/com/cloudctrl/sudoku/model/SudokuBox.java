@@ -10,8 +10,8 @@ import java.util.function.Consumer;
  */
 public class SudokuBox {
 
-    private String name;
-    private ImmutableSet<SudokuCell> cells;
+    private final String name;
+    private final ImmutableSet<SudokuCell> cells;
 
     public SudokuBox(String name, ImmutableSet<SudokuCell> cells) {
         this.name = name;
