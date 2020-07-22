@@ -1,8 +1,11 @@
 package com.cloudctrl.sudoku.model;
 
-import com.google.common.collect.ImmutableSet;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -11,11 +14,11 @@ import java.util.function.Consumer;
 public class SudokuBox {
 
     private final String name;
-    private final ImmutableSet<SudokuCell> cells;
+    private final Set<SudokuCell> cells;
 
-    public SudokuBox(String name, ImmutableSet<SudokuCell> cells) {
+    public SudokuBox(String name, Set<SudokuCell> cells) {
         this.name = name;
-        this.cells = cells;
+        this.cells = Set.copyOf(cells);
     }
 
     public SudokuBox(String name, SudokuCell minCell, SudokuCell maxCell) {
@@ -50,14 +53,14 @@ public class SudokuBox {
         return true;
     }
 
-    private static ImmutableSet<SudokuCell> createCells(SudokuCell minCell, SudokuCell maxCell) {
-        ImmutableSet.Builder<SudokuCell> builder = ImmutableSet.<SudokuCell>builder();
+    private static Set<SudokuCell> createCells(SudokuCell minCell, SudokuCell maxCell) {
+        var cells = new HashSet<SudokuCell>();
         for (int ypos = minCell.y(); ypos <= maxCell.y(); ypos++) {
             for (int xpos = minCell.x(); xpos <= maxCell.x(); xpos++) {
-                builder.add(new SudokuCell(xpos, ypos));
+                cells.add(new SudokuCell(xpos, ypos));
             }
         }
-        return builder.build();
+        return cells;
     }
 
     public void forCells(Collection<SudokuCell> skipList, Consumer<SudokuCell> action) {

@@ -1,11 +1,10 @@
 package com.cloudctrl.sudoku.model;
 
-import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
-import com.google.common.collect.ImmutableSet;
-import junit.framework.TestCase;
-
 import java.util.Map;
 import java.util.Set;
+
+import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
+import junit.framework.TestCase;
 
 /**
  * Created by Jan on 14-8-2016.
@@ -60,8 +59,8 @@ public class SudokuGameTest extends TestCase {
 
         SudokuGame game = SudokuGames.SIMPLE_GAME;
 
-        assertEquals(ImmutableSet.of(3, 4, 5), game.getOptionsPerCell(new SudokuCell(1, 1)));
-        assertEquals(ImmutableSet.of(2, 5, 9), game.getOptionsPerCell(new SudokuCell(9, 9)));
+        assertEquals(Set.of(3, 4, 5), game.getOptionsPerCell(new SudokuCell(1, 1)));
+        assertEquals(Set.of(2, 5, 9), game.getOptionsPerCell(new SudokuCell(9, 9)));
     }
 
 }

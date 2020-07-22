@@ -6,21 +6,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import com.google.common.collect.ImmutableSet;
-
 /**
  * Created by Jan on 14-8-2016.
  */
 public class SudokuBoard {
 
-    private static ImmutableSet<Integer> ALL_VALUES = ImmutableSet.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    private static Set<Integer> ALL_VALUES = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-    private final ImmutableSet<SudokuBox> boxes;
+    private final Set<SudokuBox> boxes;
     private final int maxX;
     private final int maxY;
 
     public SudokuBoard(Collection<SudokuBox> boxes) {
-        this.boxes = ImmutableSet.copyOf(boxes);
+        this.boxes = Set.copyOf(boxes);
         this.maxX = boxes.stream().mapToInt(b -> b.maxX()).max().getAsInt();
         this.maxY = boxes.stream().mapToInt(b -> b.maxY()).max().getAsInt();
     }
@@ -45,7 +43,7 @@ public class SudokuBoard {
         return maxY;
     }
 
-    public ImmutableSet<Integer> allValues() {
+    public Set<Integer> allValues() {
         return ALL_VALUES;
     }
 

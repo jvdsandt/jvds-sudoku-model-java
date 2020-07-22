@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-
 /**
  * Created by jan on 16-04-17.
  */
@@ -21,7 +19,7 @@ public class SudokuGamePlay extends SudokuGameBase {
         this.previousPlay = prevGame;
         this.solvedCells = new HashMap<SudokuCell, Integer>(prevGame.solvedCells());
         this.solvedCells.put(move.getCell(), move.getValue());
-        this.solvedCells = ImmutableMap.copyOf(this.solvedCells);
+        this.solvedCells = Map.copyOf(this.solvedCells);
         this.optionsPerCell = options;
     }
 

@@ -1,6 +1,5 @@
 package com.cloudctrl.sudoku.model.builder;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

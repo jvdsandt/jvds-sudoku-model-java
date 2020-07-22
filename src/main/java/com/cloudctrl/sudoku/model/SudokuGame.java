@@ -1,8 +1,6 @@
 package com.cloudctrl.sudoku.model;
 
 import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,7 +25,7 @@ public class SudokuGame extends SudokuGameBase {
 
     public SudokuGame(SudokuBoard board, Map<SudokuCell, Integer> fixedCells) {
         this.board = board;
-        this.fixedCells = ImmutableMap.copyOf(fixedCells);
+        this.fixedCells = Map.copyOf(fixedCells);
     }
 
     @Override
@@ -41,26 +39,25 @@ public class SudokuGame extends SudokuGameBase {
     }
 
     public Map<SudokuCell, Integer> valuesFor(Collection<SudokuCell> cells) {
-        var b = new ImmutableMap.Builder<SudokuCell, Integer>();
+        var map = new HashMap<SudokuCell, Integer>();
         cells.stream().forEach((c) -> {
             int value = valueAt(c);
             if (value != -1) {
-                b.put(c, value);
+                map.put(c, value);
             }
         });
-        return b.build();
+        return map;
     }
 
     public Map<SudokuCell, Set<Integer>> findOpenCellValues() {
-        Map<SudokuCell, Set<Integer>> cellOptions = new HashMap<>();
+        var cellOptions = new HashMap<SudokuCell, Set<Integer>>();
         board.forBoxes((eachBox) -> {
             Map<SudokuCell, Integer> filledCells = valuesFor(eachBox.getCells());
             Set<Integer> openValues = new HashSet<>(board.allValues());
             openValues.removeAll(filledCells.values());
             eachBox.forCells(filledCells.keySet(), (eachOpenCell) -> {
-                Set<Integer> possibleValues = Sets.intersection(
-                        cellOptions.getOrDefault(eachOpenCell, board.allValues()),
-                        openValues);
+                Set<Integer> possibleValues = new HashSet<>(openValues);
+                possibleValues.retainAll(cellOptions.getOrDefault(eachOpenCell, board.allValues()));
                 if (possibleValues.isEmpty()) {
                     throw new RuntimeException("unsolvable");
                 }
@@ -85,7 +82,7 @@ public class SudokuGame extends SudokuGameBase {
             forOpenCells((eachCell) -> {
                 map.put(eachCell, board.possibleValues(eachCell, this));
             });
-            optionsPerCell = ImmutableMap.copyOf(map);
+            optionsPerCell = Map.copyOf(map);
         }
         return optionsPerCell;
     }
