@@ -64,18 +64,18 @@ public class SudokuBox {
     }
 
     public void forCells(Collection<SudokuCell> skipList, Consumer<SudokuCell> action) {
-        cells.stream().forEach((c) -> {
+        for (SudokuCell c : cells) {
             if (!(skipList.contains(c))) {
                 action.accept(c);
             }
-        });
+        }
     }
 
     public Set<Integer> possibleValues(SudokuCell aCell, Set<Integer> values, SudokuGameBase game) {
         Set<Integer> result = new HashSet<>(values);
         cells.forEach((eachCell) -> {
             if (eachCell != aCell) {
-                game.valueIfKnown(eachCell, (value) -> { result.remove(value); });
+                game.valueIfKnown(eachCell, (value) -> result.remove(value));
             }
         });
         return result;
@@ -84,8 +84,7 @@ public class SudokuBox {
     public SudokuMove findMove(Map<SudokuCell, Set<Integer>> options) {
         Map<Integer, Set<SudokuCell>> cellsPerValue = new HashMap<>();
         for (SudokuCell eachCell : cells) {
-            Set<Integer> values =
-                    options.getOrDefault(eachCell, Collections.emptySet());
+            var values = options.getOrDefault(eachCell, Collections.emptySet());
             for (Integer value : values) {
                 if (cellsPerValue.containsKey(value)) {
                     cellsPerValue.get(value).add(eachCell);
@@ -96,11 +95,10 @@ public class SudokuBox {
                 }
             }
         }
-        for (Map.Entry<Integer, Set<SudokuCell>> entry : cellsPerValue.entrySet()) {
-            if (entry.getValue().size() == 1) {
-                return new SudokuMove(entry.getValue().iterator().next(), entry.getKey());
-            }
-        }
-        return null;
+        return cellsPerValue.entrySet().stream()
+                .filter(e -> e.getValue().size() == 1)
+                .map(e -> new SudokuMove(e.getValue().iterator().next(), e.getKey(), SudokuMove.Reason.ONLY_PLACE))
+                .findFirst()
+                .orElse(null);
     }
 }

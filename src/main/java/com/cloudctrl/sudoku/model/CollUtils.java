@@ -38,7 +38,7 @@ public class CollUtils {
     }
 
     public static <K, V> Map<K, V> copyWith(Map<K, V> source, K key, V value) {
-        if (source.get(key) == value) {
+        if (value.equals(source.get(key))) {
             return source;
         }
         Map<K, V> newSet = new HashMap<>(source);

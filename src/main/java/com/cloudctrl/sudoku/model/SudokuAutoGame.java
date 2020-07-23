@@ -12,36 +12,18 @@ public class SudokuAutoGame extends SudokuGamePlay {
 
     protected boolean guessed;
 
-    public static SudokuAutoGame newFrom(SudokuGameBase prevGame, SudokuMove move, boolean guessed) {
-
-        Map<SudokuCell, Set<Integer>> options = new HashMap<>(prevGame.getOptionsPerCell());
-        options.remove(move.getCell());
-
-        for(SudokuCell eachCell : prevGame.getBoard().cellsSharingBox(move.getCell())) {
-            Set<Integer> vals = new HashSet<>(options.get(eachCell));
-            vals.remove(move.getValue());
-            if (vals.isEmpty()) {
-                return null;
-            }
-            options.put(eachCell, vals);
-        };
-
-        return new SudokuAutoGame(prevGame, move, guessed, options);
-    }
-
-    public static SudokuAutoGame newFromInvalid(SudokuGameBase prevGame, SudokuMove invalidMove) {
-
-        Map<SudokuCell, Set<Integer>> options = new HashMap<>(prevGame.getOptionsPerCell());
-        options.put(
-                invalidMove.getCell(),
-                CollUtils.copyWithout(options.get(invalidMove.getCell()), invalidMove.getValue())
-        );
-
-        return new SudokuAutoGame(prevGame, invalidMove, false, options);
-    }
-
-    public SudokuAutoGame(SudokuGameBase prevGame, SudokuMove move, boolean guessed, Map<SudokuCell, Set<Integer>> options) {
+    public SudokuAutoGame(SudokuGameBase prevGame, SudokuMove move, Map<SudokuCell, Set<Integer>> options) {
         super(prevGame, move, options);
-        this.guessed = guessed;
+        this.guessed = move.getReason() == SudokuMove.Reason.GUESS;
+    }
+
+    public SudokuGamePlay goBackAndMove() {
+        if (!guessed) {
+            return previousPlay.goBackAndMove();
+        }
+        var newOptions = new HashMap<>(previousPlay.getOptionsPerCell());
+        var newValues = newOptions.get(lastMove.getCell());
+        newOptions.put(lastMove.getCell(), CollUtils.copyWithout(newValues, lastMove.getValue()));
+        return new SudokuAutoGame(previousPlay, lastMove, newOptions);
     }
 }

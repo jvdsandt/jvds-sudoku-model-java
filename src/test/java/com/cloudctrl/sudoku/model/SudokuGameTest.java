@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
+import com.cloudctrl.sudoku.model.data.SudokuGames;
 import junit.framework.TestCase;
 
 /**

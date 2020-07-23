@@ -38,6 +38,10 @@ public class SudokuGame extends SudokuGameBase {
         return fixedCells.getOrDefault(cell, -1);
     }
 
+    public int numberOfCellsToSolve() {
+        return board.getRelevantCells().size() - fixedCells.size();
+    }
+
     public Map<SudokuCell, Integer> valuesFor(Collection<SudokuCell> cells) {
         var map = new HashMap<SudokuCell, Integer>();
         cells.stream().forEach((c) -> {
@@ -86,4 +90,22 @@ public class SudokuGame extends SudokuGameBase {
         }
         return optionsPerCell;
     }
+
+    @Override
+    public SudokuGamePlay goBackAndMove() {
+        throw new IllegalStateException();
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder(100);
+        for (int y = 1; y <= board.maxY(); y++) {
+            for (int x = 1; x <= board.maxX(); x++) {
+                var v = valueAt(x, y);
+                sb.append(v > 0 ? v : "?").append(' ');
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
 }

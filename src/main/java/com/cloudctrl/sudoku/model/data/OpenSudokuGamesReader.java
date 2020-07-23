@@ -1,4 +1,4 @@
-package com.cloudctrl.sudoku.model;
+package com.cloudctrl.sudoku.model.data;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cloudctrl.sudoku.model.SudokuGame;
 import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

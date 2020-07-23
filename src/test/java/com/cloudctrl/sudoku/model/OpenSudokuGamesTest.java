@@ -2,6 +2,7 @@ package com.cloudctrl.sudoku.model;
 
 import java.util.List;
 
+import com.cloudctrl.sudoku.model.data.OpenSudokuGamesReader;
 import junit.framework.TestCase;
 
 /**
