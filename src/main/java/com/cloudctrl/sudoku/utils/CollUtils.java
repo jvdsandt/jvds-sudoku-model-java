@@ -1,4 +1,4 @@
-package com.cloudctrl.sudoku.model;
+package com.cloudctrl.sudoku.utils;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -11,20 +11,20 @@ import java.util.Collections;
 public class SudokuBoardBuilderTest extends TestCase {
 
     public void testDefault9x9() {
-        SudokuBoard board = SudokuBoardBuilder.default9x9();
+        Board board = SudokuBoardBuilder.default9x9();
         assertEquals(27, board.getBoxes().size());
         assertEquals(9, board.maxX());
         assertEquals(9, board.maxY());
     }
 
     public void testIncludes() {
-        SudokuBoard board = SudokuBoardBuilder.default9x9();
-        assertTrue(board.includes(new SudokuCell(9, 9)));
-        assertFalse(board.includes(new SudokuCell(10, 10)));
+        Board board = SudokuBoardBuilder.default9x9();
+        assertTrue(board.includes(new Cell(9, 9)));
+        assertFalse(board.includes(new Cell(10, 10)));
     }
 
     public void testCanAdd() {
-        SudokuBoard board = SudokuBoardBuilder.default9x9();
-        board.canAdd(new SudokuCell(9, 9), 5, Collections.emptyMap());
+        Board board = SudokuBoardBuilder.default9x9();
+        board.canAdd(new Cell(9, 9), 5, Collections.emptyMap());
     }
 }

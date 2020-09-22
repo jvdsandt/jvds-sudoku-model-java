@@ -11,17 +11,17 @@ import java.util.function.Consumer;
 /**
  * Created by Jan on 14-8-2016.
  */
-public class SudokuBox {
+public class Box {
 
     private final String name;
-    private final Set<SudokuCell> cells;
+    private final Set<Cell> cells;
 
-    public SudokuBox(String name, Set<SudokuCell> cells) {
+    public Box(String name, Set<Cell> cells) {
         this.name = name;
         this.cells = Set.copyOf(cells);
     }
 
-    public SudokuBox(String name, SudokuCell minCell, SudokuCell maxCell) {
+    public Box(String name, Cell minCell, Cell maxCell) {
         this(name, createCells(minCell, maxCell));
     }
 
@@ -33,19 +33,19 @@ public class SudokuBox {
         return cells.stream().mapToInt(cell -> cell.y()).max().getAsInt();
     }
 
-    public Collection<SudokuCell> getCells() {
+    public Collection<Cell> getCells() {
         return cells;
     }
 
-    public boolean includes(SudokuCell aCell) {
+    public boolean includes(Cell aCell) {
         return cells.contains(aCell);
     }
 
-    public boolean canAdd(SudokuCell cell, int value, Map<SudokuCell, Integer> fixedCells) {
+    public boolean canAdd(Cell cell, int value, Map<Cell, Integer> fixedCells) {
         if (!includes(cell)) {
             return true;
         }
-        for (SudokuCell eachCell : cells) {
+        for (Cell eachCell : cells) {
             if (fixedCells.getOrDefault(eachCell, -1) == value) {
                 return false;
             }
@@ -53,25 +53,25 @@ public class SudokuBox {
         return true;
     }
 
-    private static Set<SudokuCell> createCells(SudokuCell minCell, SudokuCell maxCell) {
-        var cells = new HashSet<SudokuCell>();
+    private static Set<Cell> createCells(Cell minCell, Cell maxCell) {
+        var cells = new HashSet<Cell>();
         for (int ypos = minCell.y(); ypos <= maxCell.y(); ypos++) {
             for (int xpos = minCell.x(); xpos <= maxCell.x(); xpos++) {
-                cells.add(new SudokuCell(xpos, ypos));
+                cells.add(new Cell(xpos, ypos));
             }
         }
         return cells;
     }
 
-    public void forCells(Collection<SudokuCell> skipList, Consumer<SudokuCell> action) {
-        for (SudokuCell c : cells) {
+    public void forCells(Collection<Cell> skipList, Consumer<Cell> action) {
+        for (Cell c : cells) {
             if (!(skipList.contains(c))) {
                 action.accept(c);
             }
         }
     }
 
-    public Set<Integer> possibleValues(SudokuCell aCell, Set<Integer> values, SudokuGameBase game) {
+    public Set<Integer> possibleValues(Cell aCell, Set<Integer> values, CellAccess game) {
         Set<Integer> result = new HashSet<>(values);
         cells.forEach((eachCell) -> {
             if (eachCell != aCell) {
@@ -81,15 +81,15 @@ public class SudokuBox {
         return result;
     }
 
-    public SudokuMove findMove(Map<SudokuCell, Set<Integer>> options) {
-        Map<Integer, Set<SudokuCell>> cellsPerValue = new HashMap<>();
-        for (SudokuCell eachCell : cells) {
+    public Move findMove(Map<Cell, Set<Integer>> options) {
+        Map<Integer, Set<Cell>> cellsPerValue = new HashMap<>();
+        for (Cell eachCell : cells) {
             var values = options.getOrDefault(eachCell, Collections.emptySet());
             for (Integer value : values) {
                 if (cellsPerValue.containsKey(value)) {
                     cellsPerValue.get(value).add(eachCell);
                 } else {
-                    Set<SudokuCell> cells = new HashSet<>();
+                    Set<Cell> cells = new HashSet<>();
                     cells.add(eachCell);
                     cellsPerValue.put(value, cells);
                 }
@@ -97,7 +97,7 @@ public class SudokuBox {
         }
         return cellsPerValue.entrySet().stream()
                 .filter(e -> e.getValue().size() == 1)
-                .map(e -> new SudokuMove(e.getValue().iterator().next(), e.getKey(), SudokuMove.Reason.ONLY_PLACE))
+                .map(e -> new Move(e.getValue().iterator().next(), e.getKey(), Move.Reason.ONLY_PLACE))
                 .findFirst()
                 .orElse(null);
     }

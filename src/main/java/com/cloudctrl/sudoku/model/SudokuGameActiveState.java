@@ -8,25 +8,29 @@ import java.util.Set;
 /**
  * Created by jan on 16-04-17.
  */
-public class SudokuGamePlay extends SudokuGameBase {
+public class SudokuGameActiveState extends SudokuGameState {
 
     protected final SudokuGame game;
-    protected final SudokuGameBase previousPlay;
-    protected final Map<SudokuCell, Integer> solvedCells;
-    protected final SudokuMove lastMove;
+    protected final SudokuGameState previousState;
+    protected final Map<Cell, Integer> solvedCells;
+    protected final Move lastMove;
 
-    protected SudokuGamePlay(SudokuGameBase prevGame, SudokuMove move, Map<SudokuCell, Set<Integer>> options) {
-        this.game = prevGame.getGame();
-        this.previousPlay = prevGame;
-        var newSolved = new HashMap<SudokuCell, Integer>(prevGame.solvedCells());
+    SudokuGameActiveState(Map<Cell, Set<Integer>> options, SudokuGameState prevState, Move move) {
+        super(options);
+        this.game = prevState.getGame();
+        this.previousState = prevState;
+        var newSolved = new HashMap<Cell, Integer>(prevState.solvedCells());
         newSolved.put(move.getCell(), move.getValue());
         this.solvedCells = Collections.unmodifiableMap(newSolved);
-        this.optionsPerCell = options;
         this.lastMove = move;
     }
 
+    public SudokuGameActiveState(SudokuGameState prevState, Move move) {
+        this(prevState.getBoard().processMove(prevState.getOptionsPerCell(), move), prevState, move);
+    }
+
     @Override
-    public Map<SudokuCell, Integer> solvedCells() {
+    public Map<Cell, Integer> solvedCells() {
         return this.solvedCells;
     }
 
@@ -35,12 +39,13 @@ public class SudokuGamePlay extends SudokuGameBase {
         return game;
     }
 
-    public int numberOfCellsToSolve() {
-        return game.numberOfCellsToSolve() - solvedCells.size();
+    @Override
+    public SudokuGameState getPreviousState() {
+        return this.previousState;
     }
 
     @Override
-    public int valueAt(SudokuCell cell) {
+    public int valueAt(Cell cell) {
         int val = solvedCells.getOrDefault(cell, -1);
         if (val == -1) {
             val = game.valueAt(cell);
@@ -48,12 +53,16 @@ public class SudokuGamePlay extends SudokuGameBase {
         return val;
     }
 
+    public Move getLastMove() {
+        return this.lastMove;
+    }
+
     public String toString() {
         var sb = new StringBuilder(100);
         var board = getBoard();
         for (int y = 1; y <= board.maxY(); y++) {
             for (int x = 1; x <= board.maxX(); x++) {
-                var c = new SudokuCell(x, y);
+                var c = new Cell(x, y);
                 if (game.valueAt(c) > 0) {
                     sb.append("[").append(game.valueAt(c)).append("]");
                 } else if (solvedCells.containsKey(c)) {

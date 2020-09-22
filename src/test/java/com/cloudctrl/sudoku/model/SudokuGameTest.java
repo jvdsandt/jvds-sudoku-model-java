@@ -6,6 +6,7 @@ import java.util.Set;
 import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
 import com.cloudctrl.sudoku.model.data.SudokuGames;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Created by Jan on 14-8-2016.
@@ -52,16 +53,17 @@ public class SudokuGameTest extends TestCase {
 
     public void testCreateSimpleGame() {
         SudokuGame game = SudokuGames.SIMPLE_GAME;
-        Map<SudokuCell, Set<Integer>> openCellValues = game.findOpenCellValues();
+        Map<Cell, Set<Integer>> openCellValues = game.findOpenCellValues();
 
     }
 
     public void testOptionsPerCell() {
 
         SudokuGame game = SudokuGames.SIMPLE_GAME;
+        var state = new SudokuInitialState(game);
 
-        assertEquals(Set.of(3, 4, 5), game.getOptionsPerCell(new SudokuCell(1, 1)));
-        assertEquals(Set.of(2, 5, 9), game.getOptionsPerCell(new SudokuCell(9, 9)));
+        assertEquals(Set.of(3, 4, 5), state.getOptionsPerCell(new Cell(1, 1)));
+        assertEquals(Set.of(2, 5, 9), state.getOptionsPerCell(new Cell(9, 9)));
     }
 
 }

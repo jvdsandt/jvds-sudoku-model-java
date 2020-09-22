@@ -9,35 +9,22 @@ import org.junit.Test;
 public class SudokuGamePlayTest {
 
     @Test
-    public void test() {
-
-        List<SudokuGame> games = SudokuGames.getEasyGames();
-
-        for (SudokuGame game : games) {
-        }
-    }
-
-    @Test
     public void testFirstEasyGame() {
-        SudokuGameBase game = SudokuGames.getEasyGames().get(0);
-        List<SudokuGameBase> steps = new ArrayList<>();
-        steps.add(game);
-        while (!game.isSolved()) {
-            System.out.println(game);
-            game = game.doNextMove();
-            steps.add(game);
-        }
+        SudokuGame game = SudokuGames.getEasyGames().get(0);
+        testGame(game);
     }
 
     @Test
     public void testFirstVeryHardGame() {
-        SudokuGameBase game = SudokuGames.getVeryHardGames().get(0);
-        List<SudokuGameBase> steps = new ArrayList<>();
-        steps.add(game);
-        while (!game.isSolved()) {
-            System.out.println(game);
-            game = game.doNextMove();
-            steps.add(game);
+        SudokuGame game = SudokuGames.getVeryHardGames().get(0);
+        testGame(game);
+    }
+
+    public void testGame(SudokuGame game) {
+        AutoPlayer player = new AutoPlayer(game);
+        while (!player.isSolved()) {
+            player.doNextMove();
+            System.out.println(player.getCurrentStep());
         }
     }
 }

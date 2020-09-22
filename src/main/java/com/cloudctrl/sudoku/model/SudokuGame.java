@@ -12,10 +12,10 @@ import java.util.function.Consumer;
 /**
  * Created by jan on 16-08-16.
  */
-public class SudokuGame extends SudokuGameBase {
+public class SudokuGame implements CellAccess {
 
-    private final SudokuBoard board;
-    private final Map<SudokuCell, Integer> fixedCells;
+    private final Board board;
+    private final Map<Cell, Integer> fixedCells;
 
     public static SudokuGame fromArray(int[][] cells) {
         SudokuGameBuilder builder = new SudokuGameBuilder();
@@ -23,18 +23,20 @@ public class SudokuGame extends SudokuGameBase {
         return builder.newGame();
     }
 
-    public SudokuGame(SudokuBoard board, Map<SudokuCell, Integer> fixedCells) {
+    public SudokuGame(Board board, Map<Cell, Integer> fixedCells) {
         this.board = board;
         this.fixedCells = Map.copyOf(fixedCells);
     }
 
-    @Override
-    public SudokuGame getGame() { return this; }
+    public Map<Cell, Integer> getFixedCells() {
+        return fixedCells;
+    }
 
-    @Override
-    public SudokuBoard getBoard() { return board; }
+    public Board getBoard() {
+        return board;
+    }
 
-    public int valueAt(SudokuCell cell) {
+    public int valueAt(Cell cell) {
         return fixedCells.getOrDefault(cell, -1);
     }
 
@@ -42,8 +44,16 @@ public class SudokuGame extends SudokuGameBase {
         return board.getRelevantCells().size() - fixedCells.size();
     }
 
-    public Map<SudokuCell, Integer> valuesFor(Collection<SudokuCell> cells) {
-        var map = new HashMap<SudokuCell, Integer>();
+    public Map<Cell, Set<Integer>> calcOptionsPerCell(CellAccess gameState) {
+        Map<Cell, Set<Integer>> map = new HashMap<>();
+        forOpenCells((eachCell) -> {
+            map.put(eachCell, getBoard().possibleValues(eachCell, gameState));
+        });
+        return map;
+    }
+
+    public Map<Cell, Integer> valuesFor(Collection<Cell> cells) {
+        var map = new HashMap<Cell, Integer>();
         cells.stream().forEach((c) -> {
             int value = valueAt(c);
             if (value != -1) {
@@ -53,10 +63,10 @@ public class SudokuGame extends SudokuGameBase {
         return map;
     }
 
-    public Map<SudokuCell, Set<Integer>> findOpenCellValues() {
-        var cellOptions = new HashMap<SudokuCell, Set<Integer>>();
+    public Map<Cell, Set<Integer>> findOpenCellValues() {
+        var cellOptions = new HashMap<Cell, Set<Integer>>();
         board.forBoxes((eachBox) -> {
-            Map<SudokuCell, Integer> filledCells = valuesFor(eachBox.getCells());
+            Map<Cell, Integer> filledCells = valuesFor(eachBox.getCells());
             Set<Integer> openValues = new HashSet<>(board.allValues());
             openValues.removeAll(filledCells.values());
             eachBox.forCells(filledCells.keySet(), (eachOpenCell) -> {
@@ -71,29 +81,12 @@ public class SudokuGame extends SudokuGameBase {
         return cellOptions;
     }
 
-    public void forOpenCells(Consumer<SudokuCell> action) {
+    public void forOpenCells(Consumer<Cell> action) {
         board.forRelevantCells((eachCell) -> {
             if (!fixedCells.containsKey(eachCell)) {
                 action.accept(eachCell);
             }
         });
-    }
-
-    @Override
-    public Map<SudokuCell, Set<Integer>> getOptionsPerCell() {
-        if (optionsPerCell == null) {
-            Map<SudokuCell, Set<Integer>> map = new HashMap<>();
-            forOpenCells((eachCell) -> {
-                map.put(eachCell, board.possibleValues(eachCell, this));
-            });
-            optionsPerCell = Map.copyOf(map);
-        }
-        return optionsPerCell;
-    }
-
-    @Override
-    public SudokuGamePlay goBackAndMove() {
-        throw new IllegalStateException();
     }
 
     public String toString() {

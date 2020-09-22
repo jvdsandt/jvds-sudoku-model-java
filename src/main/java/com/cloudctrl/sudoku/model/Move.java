@@ -5,23 +5,23 @@ import java.util.Objects;
 /**
  * Data class that represents a Move.
  */
-public class SudokuMove {
+public class Move {
 
     enum Reason {
         ONLY_OPTION, ONLY_PLACE, GUESS, UNKNOWN
     }
 
-    private final SudokuCell cell;
+    private final Cell cell;
     private final int value;
     private final Reason reason;
 
-    SudokuMove(SudokuCell cell, int value, Reason r) {
+    Move(Cell cell, int value, Reason r) {
         this.cell = cell;
         this.value = value;
         this.reason = r;
     }
 
-    public SudokuCell getCell() {
+    public Cell getCell() {
         return cell;
     }
 
@@ -38,7 +38,7 @@ public class SudokuMove {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SudokuMove that = (SudokuMove) o;
+        Move that = (Move) o;
         return Objects.equals(value, that.value) && Objects.equals(cell, that.cell);
     }
 

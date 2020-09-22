@@ -6,32 +6,34 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.cloudctrl.sudoku.utils.CollUtils;
+
 /**
  * Created by Jan on 14-8-2016.
  */
-public class SudokuBoard {
+public class Board {
 
     private static Set<Integer> ALL_VALUES = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-    private final Set<SudokuBox> boxes;
+    private final Set<Box> boxes;
     private final int maxX;
     private final int maxY;
 
-    public SudokuBoard(Collection<SudokuBox> boxes) {
+    public Board(Collection<Box> boxes) {
         this.boxes = Set.copyOf(boxes);
         this.maxX = boxes.stream().mapToInt(b -> b.maxX()).max().getAsInt();
         this.maxY = boxes.stream().mapToInt(b -> b.maxY()).max().getAsInt();
     }
 
-    public Set<SudokuBox> getBoxes() {
+    public Set<Box> getBoxes() {
         return boxes;
     }
 
-    public boolean includes(SudokuCell cell) {
+    public boolean includes(Cell cell) {
         return boxes.stream().anyMatch((box) -> box.includes(cell));
     }
 
-    public boolean canAdd(SudokuCell cell, int value, Map<SudokuCell, Integer> fixedCells) {
+    public boolean canAdd(Cell cell, int value, Map<Cell, Integer> fixedCells) {
         return boxes.stream()
                 .allMatch(b -> b.canAdd(cell, value, fixedCells));
     }
@@ -48,11 +50,11 @@ public class SudokuBoard {
         return ALL_VALUES;
     }
 
-    public void forBoxes(Consumer<SudokuBox> action) {
+    public void forBoxes(Consumer<Box> action) {
         boxes.stream().forEach(action);
     }
 
-    public void forBoxes(SudokuCell cell, Consumer<SudokuBox> action) {
+    public void forBoxes(Cell cell, Consumer<Box> action) {
         boxes.stream().
                 filter(eachBox -> eachBox.includes(cell)).
                 forEach(action);
@@ -61,7 +63,7 @@ public class SudokuBoard {
     /*
         relevantCellsDo: aBlock
      */
-    public void forRelevantCells(Consumer<SudokuCell> action) {
+    public void forRelevantCells(Consumer<Cell> action) {
         var cellSet = new HashSet<>();
         forBoxes(eachBox -> {
             eachBox.getCells().forEach(eachCell -> {
@@ -73,14 +75,14 @@ public class SudokuBoard {
         });
     }
 
-    public Set<SudokuCell> getRelevantCells() {
-        var cellSet = new HashSet<SudokuCell>();
+    public Set<Cell> getRelevantCells() {
+        var cellSet = new HashSet<Cell>();
         forBoxes(eachBox -> cellSet.addAll(eachBox.getCells()));
         return cellSet;
     }
 
-    private Set<SudokuCell> cellsSharingBox(SudokuCell cell) {
-        var cellsSet = new HashSet<SudokuCell>();
+    private Set<Cell> cellsSharingBox(Cell cell) {
+        var cellsSet = new HashSet<Cell>();
         boxes.forEach((eachBox) -> {
             if (eachBox.includes(cell)) {
                 eachBox.getCells().forEach((eachCell) -> {
@@ -93,9 +95,9 @@ public class SudokuBoard {
         return cellsSet;
     }
 
-    public Set<Integer> possibleValues(SudokuCell cell, SudokuGameBase game) {
+    public Set<Integer> possibleValues(Cell cell, CellAccess game) {
         Set<Integer> values = ALL_VALUES;
-        for (SudokuBox eachBox : boxes) {
+        for (Box eachBox : boxes) {
             if (eachBox.includes(cell)) {
                 values = eachBox.possibleValues(cell, values, game);
             }
@@ -103,9 +105,9 @@ public class SudokuBoard {
         return values;
     }
 
-    public Map<SudokuCell, Set<Integer>> processMove(Map<SudokuCell, Set<Integer>> optionsPerCell, SudokuMove move) {
+    public Map<Cell, Set<Integer>> processMove(Map<Cell, Set<Integer>> optionsPerCell, Move move) {
         var newOptions = CollUtils.copyWithout(optionsPerCell, move.getCell());
-        for (SudokuCell c : cellsSharingBox(move.getCell())) {
+        for (Cell c : cellsSharingBox(move.getCell())) {
             var values = newOptions.get(c);
             if (values != null) {
                 newOptions.put(c, CollUtils.copyWithout(values, move.getValue()));

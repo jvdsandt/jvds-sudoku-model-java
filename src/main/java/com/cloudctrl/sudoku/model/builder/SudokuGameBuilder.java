@@ -3,8 +3,8 @@ package com.cloudctrl.sudoku.model.builder;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cloudctrl.sudoku.model.SudokuBoard;
-import com.cloudctrl.sudoku.model.SudokuCell;
+import com.cloudctrl.sudoku.model.Board;
+import com.cloudctrl.sudoku.model.Cell;
 import com.cloudctrl.sudoku.model.SudokuGame;
 
 /**
@@ -12,11 +12,11 @@ import com.cloudctrl.sudoku.model.SudokuGame;
  */
 public class SudokuGameBuilder {
 
-    private SudokuBoard board;
-    private Map<SudokuCell, Integer> fixedCells;
+    private Board board;
+    private Map<Cell, Integer> fixedCells;
 
     public static SudokuGame newGameFromNumberLine(String numberLine) {
-        SudokuBoard board = SudokuBoardBuilder.default9x9();
+        Board board = SudokuBoardBuilder.default9x9();
         if (numberLine.length() < board.maxX() * board.maxY()) {
             throw new IllegalArgumentException("Not enough numbers provided");
         }
@@ -29,7 +29,7 @@ public class SudokuGameBuilder {
         this(SudokuBoardBuilder.default9x9());
     }
 
-    public SudokuGameBuilder(SudokuBoard board) {
+    public SudokuGameBuilder(Board board) {
         this.board = board;
         this.reset();
     }
@@ -38,7 +38,7 @@ public class SudokuGameBuilder {
         fixedCells = new HashMap<>();
     }
 
-    public void fix(SudokuCell cell, int value) {
+    public void fix(Cell cell, int value) {
         if (fixedCells.containsKey(cell)) {
             if (fixedCells.get(cell) == value) {
                 return;
@@ -56,7 +56,7 @@ public class SudokuGameBuilder {
     }
 
     public void fix(int xpos, int ypos, int value) {
-        this.fix(new SudokuCell(xpos, ypos), value);
+        this.fix(new Cell(xpos, ypos), value);
     }
 
     public SudokuGame newGame() {

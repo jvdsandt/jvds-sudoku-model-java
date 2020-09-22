@@ -3,12 +3,12 @@ package com.cloudctrl.sudoku.model;
 /**
  * Created by Jan on 14-8-2016.
  */
-public class SudokuCell {
+public class Cell {
 
     private final int x;
     private final int y;
 
-    public SudokuCell(int theX, int theY) {
+    public Cell(int theX, int theY) {
         if (theX < 1 || theY < 1){
             throw new IllegalArgumentException("Invalid cell");
         }
@@ -37,7 +37,7 @@ public class SudokuCell {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SudokuCell that = (SudokuCell) o;
+        Cell that = (Cell) o;
 
         if (x != that.x) return false;
         return y == that.y;
