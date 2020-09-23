@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Jan on 14-8-2016.
@@ -25,7 +27,21 @@ public class Box {
         this(name, createCells(minCell, maxCell));
     }
 
-    public int maxX() {
+    private static Set<Cell> createCells(Cell minCell, Cell maxCell) {
+        var cells = new HashSet<Cell>();
+        for (int ypos = minCell.y(); ypos <= maxCell.y(); ypos++) {
+            for (int xpos = minCell.x(); xpos <= maxCell.x(); xpos++) {
+                cells.add(new Cell(xpos, ypos));
+            }
+        }
+        return cells;
+    }
+
+    public String getName() {
+		return name;
+	}
+
+	public int maxX() {
         return cells.stream().mapToInt(cell -> cell.x()).max().getAsInt();
     }
 
@@ -53,16 +69,6 @@ public class Box {
         return true;
     }
 
-    private static Set<Cell> createCells(Cell minCell, Cell maxCell) {
-        var cells = new HashSet<Cell>();
-        for (int ypos = minCell.y(); ypos <= maxCell.y(); ypos++) {
-            for (int xpos = minCell.x(); xpos <= maxCell.x(); xpos++) {
-                cells.add(new Cell(xpos, ypos));
-            }
-        }
-        return cells;
-    }
-
     public void forCells(Collection<Cell> skipList, Consumer<Cell> action) {
         for (Cell c : cells) {
             if (!(skipList.contains(c))) {
@@ -81,7 +87,7 @@ public class Box {
         return result;
     }
 
-    public Move findMove(Map<Cell, Set<Integer>> options) {
+    public Stream<Move> findMoveStreams(Map<Cell, Set<Integer>> options) {
         Map<Integer, Set<Cell>> cellsPerValue = new HashMap<>();
         for (Cell eachCell : cells) {
             var values = options.getOrDefault(eachCell, Collections.emptySet());
@@ -97,8 +103,14 @@ public class Box {
         }
         return cellsPerValue.entrySet().stream()
                 .filter(e -> e.getValue().size() == 1)
-                .map(e -> new Move(e.getValue().iterator().next(), e.getKey(), Move.Reason.ONLY_PLACE))
-                .findFirst()
-                .orElse(null);
+                .map(e -> new Move(e.getValue().iterator().next(), e.getKey(), Move.Reason.ONLY_PLACE));
+    }
+
+    public Move findMove(Map<Cell, Set<Integer>> options) {
+        return findMoveStreams(options).findFirst().orElse(null);
+    }
+
+    public Set<Move> findMoves(Map<Cell, Set<Integer>> options) {
+        return findMoveStreams(options).collect(Collectors.toSet());
     }
 }

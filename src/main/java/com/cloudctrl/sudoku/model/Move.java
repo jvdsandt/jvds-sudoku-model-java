@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Data class that represents a Move.
  */
-public class Move {
+public class Move implements Comparable<Move> {
 
     enum Reason {
         ONLY_OPTION, ONLY_PLACE, GUESS, UNKNOWN
@@ -32,6 +32,10 @@ public class Move {
     public Reason getReason() {
         return reason;
     }
+    
+    public boolean canBeWrong() {
+    	return reason != Reason.ONLY_OPTION && reason != Reason.ONLY_PLACE;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -55,4 +59,9 @@ public class Move {
                 ", reason=" + reason +
                 '}';
     }
+
+	@Override
+	public int compareTo(Move o) {
+		return cell.compareTo(o.cell);
+	}
 }

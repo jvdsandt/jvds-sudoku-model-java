@@ -1,13 +1,12 @@
 package com.cloudctrl.sudoku.model;
 
-import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
-
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
 
 /**
  * Created by jan on 16-08-16.
@@ -61,24 +60,6 @@ public class SudokuGame implements CellAccess {
             }
         });
         return map;
-    }
-
-    public Map<Cell, Set<Integer>> findOpenCellValues() {
-        var cellOptions = new HashMap<Cell, Set<Integer>>();
-        board.forBoxes((eachBox) -> {
-            Map<Cell, Integer> filledCells = valuesFor(eachBox.getCells());
-            Set<Integer> openValues = new HashSet<>(board.allValues());
-            openValues.removeAll(filledCells.values());
-            eachBox.forCells(filledCells.keySet(), (eachOpenCell) -> {
-                Set<Integer> possibleValues = new HashSet<>(openValues);
-                possibleValues.retainAll(cellOptions.getOrDefault(eachOpenCell, board.allValues()));
-                if (possibleValues.isEmpty()) {
-                    throw new RuntimeException("unsolvable");
-                }
-                cellOptions.put(eachOpenCell, possibleValues);
-            });
-        });
-        return cellOptions;
     }
 
     public void forOpenCells(Consumer<Cell> action) {

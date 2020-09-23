@@ -34,8 +34,7 @@ public class Board {
     }
 
     public boolean canAdd(Cell cell, int value, Map<Cell, Integer> fixedCells) {
-        return boxes.stream()
-                .allMatch(b -> b.canAdd(cell, value, fixedCells));
+        return boxes.stream().allMatch(b -> b.canAdd(cell, value, fixedCells));
     }
 
     public int maxX() {
@@ -44,10 +43,6 @@ public class Board {
 
     public int maxY() {
         return maxY;
-    }
-
-    public Set<Integer> allValues() {
-        return ALL_VALUES;
     }
 
     public void forBoxes(Consumer<Box> action) {

@@ -10,15 +10,17 @@ import com.cloudctrl.sudoku.utils.CollUtils;
 
 public class AutoPlayer {
 
-    private SudokuGame game;
+    private final SudokuGame game;
 
     private List<SudokuGameState> steps;
+    private List<Move> badGuesses;
 
     public AutoPlayer(SudokuGame game) {
         super();
         this.game = game;
         this.steps = new ArrayList<>();
-        this.steps.add(new SudokuInitialState(game));
+        this.steps.add(new SudokuInitialState(this.game));
+        this.badGuesses = new ArrayList<>();
     }
 
     public SudokuGameState getCurrentStep() {
@@ -33,63 +35,59 @@ public class AutoPlayer {
         return getCurrentStep().getOptionsPerCell();
     }
 
-    private Move getFirstSingleOption(Map<Cell, Set<Integer>> options) {
-        return options.entrySet().stream()
-                .filter(e -> e.getValue().size() == 1)
-                .map(e -> new Move(e.getKey(), e.getValue().iterator().next(), Move.Reason.ONLY_OPTION))
-                .findFirst()
-                .orElse(null);
+    public List<Move> getBadGuesses() {
+		return badGuesses;
+	}
+    
+    public boolean hasBadGuesses() {
+    	return !badGuesses.isEmpty();
     }
 
-    public SudokuGameActiveState doNextMove() {
-        var options = getCurrentOptions();
-        var move = getFirstSingleOption(options);
+	public SudokuGameActiveState doNextMove() {
+        var move = getCurrentStep().getFirstSingleOptionMove();
         if (move != null) {
             return newMove(move);
         }
-        for (var b : game.getBoard().getBoxes()) {
-            var bmove = b.findMove(options);
-            if (bmove != null) {
-                return newMove(bmove);
-            }
+        move = getCurrentStep().getOnlyPlaceMove();
+        if (move != null) {
+            return newMove(move);
         }
-        return newMove(takeGuess());
+        return newMove(getCurrentStep().takeGuess());
     }
 
     public SudokuGameActiveState newMove(Move move) {
-        var options = getCurrentStep().getOptionsPerCell();
-        var newOptions = game.getBoard().processMove(options, move);
-        if (newOptions.entrySet().stream().anyMatch(e -> e.getValue().isEmpty())) {
-            return goBackAndMove();
+        var newState = new SudokuGameActiveState(getCurrentStep(), move);
+        if (newState.hasValidOptions()) {
+        	steps.add(newState);
+        	return newState;
         }
-        var newState = new SudokuGameActiveState(newOptions, getCurrentStep(), move);
-        steps.add(newState);
-        return newState;
-    }
-
-    private Move takeGuess() {
-        Cell cell = null;
-        Set<Integer> values = null;
-        for (var entry : getCurrentStep().getOptionsPerCell().entrySet()) {
-            if (values == null || values.size() > entry.getValue().size()) {
-                cell = entry.getKey();
-                values = entry.getValue();
-            }
-        }
-        return new Move(cell, values.iterator().next(), Move.Reason.GUESS);
+        return goBackAndMove();
     }
 
     public SudokuGameActiveState goBackAndMove() {
         var state = getCurrentStep();
-        while (state.getLastMove().getReason() != Move.Reason.GUESS) {
+        while (!state.getLastMove().canBeWrong()) {
             state = state.getPreviousState();
         }
         var invalidMove = state.getLastMove();
-        var newOptions = new HashMap<>(state.getPreviousState().getOptionsPerCell());
-        var newValues = newOptions.get(invalidMove.getCell());
-        newOptions.put(invalidMove.getCell(), CollUtils.copyWithout(newValues, invalidMove.getValue()));
-        SudokuGameState newState = new SudokuGameActiveState(newOptions, getCurrentStep(), state.getPreviousState().getLastMove());
+        badGuesses.add(invalidMove);
+        
+        SudokuGameState newState = new SudokuGameActiveState(state.getPreviousState(), state.getPreviousState().getLastMove(), invalidMove);
         this.steps.add(newState);
         return doNextMove();
+    }
+    
+    public String toHistoryString() {
+    	StringBuilder sb = new StringBuilder();
+    	for (int i = 1; i < steps.size(); i++) {
+    		var move = steps.get(i).getLastMove();
+    		sb.append(steps.get(i).getSolvedCells().size()).append(" | ");
+    		sb.append(move);
+    		if (badGuesses.contains(move)) {
+    			sb.append(" | BAD");
+    		}
+    		sb.append("\n");
+    	}
+    	return sb.toString();
     }
 }

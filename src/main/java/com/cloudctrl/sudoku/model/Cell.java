@@ -3,7 +3,7 @@ package com.cloudctrl.sudoku.model;
 /**
  * Created by Jan on 14-8-2016.
  */
-public class Cell {
+public class Cell implements Comparable<Cell> {
 
     private final int x;
     private final int y;
@@ -50,4 +50,9 @@ public class Cell {
         result = 31 * result + y;
         return result;
     }
+
+	@Override
+	public int compareTo(Cell o) {
+		return y == o.y ? x - o.x : y - o.y;
+	}
 }

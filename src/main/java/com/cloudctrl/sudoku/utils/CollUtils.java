@@ -11,38 +11,26 @@ import java.util.Set;
 public class CollUtils {
 
     public static <T> Set<T> copyWithout(Set<T> source, T elem) {
-        if (source.contains(elem)) {
-            Set<T> newSet = new HashSet<>(source);
-            newSet.remove(elem);
-            return newSet;
-        }
-        return source;
+        Set<T> newSet = new HashSet<>(source);
+        newSet.remove(elem);
+        return newSet;
     }
 
     public static <T> Set<T> copyWith(Set<T> source, T elem) {
-        if (source.contains(elem)) {
-            return source;
-        }
         Set<T> newSet = new HashSet<>(source);
         newSet.add(elem);
         return newSet;
     }
 
     public static <K, V> Map<K, V> copyWithout(Map<K, V> source, K key) {
-        if (source.containsKey(key)) {
-            Map<K, V> newSet = new HashMap<>(source);
-            newSet.remove(key);
-            return newSet;
-        }
-        return source;
+        Map<K, V> newMap = new HashMap<>(source);
+        newMap.remove(key);
+        return newMap;
     }
 
     public static <K, V> Map<K, V> copyWith(Map<K, V> source, K key, V value) {
-        if (value.equals(source.get(key))) {
-            return source;
-        }
-        Map<K, V> newSet = new HashMap<>(source);
-        newSet.put(key, value);
-        return newSet;
+        Map<K, V> newMap = new HashMap<>(source);
+        newMap.put(key, value);
+        return newMap;
     }
 }

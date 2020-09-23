@@ -30,8 +30,14 @@ public class SudokuInitialState extends SudokuGameState {
     public SudokuGameState getPreviousState() {
         throw new IllegalStateException("No previous state");
     }
+    
     @Override
     public int valueAt(Cell cell) {
         return game.valueAt(cell);
+    }
+
+    @Override
+    public Move getLastMove() {
+        throw new IllegalStateException("No lastMove available");
     }
 }
