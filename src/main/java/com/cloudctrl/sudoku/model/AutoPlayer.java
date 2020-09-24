@@ -1,12 +1,11 @@
 package com.cloudctrl.sudoku.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.cloudctrl.sudoku.utils.CollUtils;
+import com.cloudctrl.sudoku.model.Move.Reason;
 
 public class AutoPlayer {
 
@@ -34,6 +33,17 @@ public class AutoPlayer {
     public Map<Cell, Set<Integer>> getCurrentOptions() {
         return getCurrentStep().getOptionsPerCell();
     }
+    
+    public boolean isMovePossible(Cell c, int value) {
+    	return getCurrentStep().isPossibleMove(c, value);
+    }
+    
+    public SudokuGameActiveState doManualMove(Cell c, int value) {
+    	var move = new Move(c, value, Reason.UNKNOWN);
+        var newState = new SudokuGameActiveState(getCurrentStep(), move);
+       	steps.add(newState);
+       	return newState;
+    }
 
     public List<Move> getBadGuesses() {
 		return badGuesses;
@@ -43,19 +53,25 @@ public class AutoPlayer {
     	return !badGuesses.isEmpty();
     }
 
-	public SudokuGameActiveState doNextMove() {
+	public SudokuGameActiveState doAutoMove() {
         var move = getCurrentStep().getFirstSingleOptionMove();
         if (move != null) {
-            return newMove(move);
+            return processMove(move);
         }
         move = getCurrentStep().getOnlyPlaceMove();
         if (move != null) {
-            return newMove(move);
+            return processMove(move);
         }
-        return newMove(getCurrentStep().takeGuess());
+        return processMove(getCurrentStep().takeGuess());
     }
+	
+	public void solve() {
+		while (!isSolved()) {
+			doAutoMove();
+		}
+	}
 
-    public SudokuGameActiveState newMove(Move move) {
+    private SudokuGameActiveState processMove(Move move) {
         var newState = new SudokuGameActiveState(getCurrentStep(), move);
         if (newState.hasValidOptions()) {
         	steps.add(newState);
@@ -64,17 +80,20 @@ public class AutoPlayer {
         return goBackAndMove();
     }
 
-    public SudokuGameActiveState goBackAndMove() {
+    private SudokuGameActiveState goBackAndMove() {
         var state = getCurrentStep();
         while (!state.getLastMove().canBeWrong()) {
             state = state.getPreviousState();
+        }
+        while (state.getLastMove().equals(state.getPreviousState().getLastMove())) {
+        	state = state.getPreviousState();
         }
         var invalidMove = state.getLastMove();
         badGuesses.add(invalidMove);
         
         SudokuGameState newState = new SudokuGameActiveState(state.getPreviousState(), state.getPreviousState().getLastMove(), invalidMove);
         this.steps.add(newState);
-        return doNextMove();
+        return doAutoMove();
     }
     
     public String toHistoryString() {

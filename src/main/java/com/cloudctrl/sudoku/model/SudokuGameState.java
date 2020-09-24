@@ -47,6 +47,11 @@ public abstract class SudokuGameState implements CellAccess {
     public boolean isSolved() {
         return numberOfCellsToSolve() == 0;
     }
+    
+    public boolean isPossibleMove(Cell c, int value) {
+    	return optionsPerCell.containsKey(c) &&
+    			optionsPerCell.get(c).contains(value);
+    }
 
     public Board getBoard() {
         return getGame().getBoard();
@@ -142,5 +147,18 @@ public abstract class SudokuGameState implements CellAccess {
         }
         return sb.toString();
     }
+    
+    public String asNumberLine() {
+        var sb = new StringBuilder(100);
+        var board = getBoard();
+        for (int y = 1; y <= board.maxY(); y++) {
+            for (int x = 1; x <= board.maxX(); x++) {
+            	var v = valueAt(x, y);
+            	sb.append(v > 0 ? v : 0);
+            }
+        }
+        return sb.toString();
+    }
+    
     
 }

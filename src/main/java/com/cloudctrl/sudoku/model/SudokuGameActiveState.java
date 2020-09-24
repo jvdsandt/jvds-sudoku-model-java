@@ -1,6 +1,5 @@
 package com.cloudctrl.sudoku.model;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,6 +17,14 @@ public class SudokuGameActiveState extends SudokuGameState {
 
     private SudokuGameActiveState(Map<Cell, Set<Integer>> options, SudokuGameState prevState, Move move) {
         super(options);
+        if (prevState.valueAt(move.getCell()) != move.getValue()) {
+        	if (!prevState.getOptionsPerCell().containsKey(move.getCell())) {
+        		throw new IllegalArgumentException("Cell not open, invalid move: " + move);
+        	}
+        	if (!prevState.getOptionsPerCell(move.getCell()).contains(move.getValue())) {
+        		throw new IllegalArgumentException("Value not possible, invalid move: " + move);
+        	}
+        }
         this.game = prevState.getGame();
         this.previousState = prevState;
         this.solvedCells = CollUtils.copyWith(prevState.getSolvedCells(), move.getCell(), move.getValue());
