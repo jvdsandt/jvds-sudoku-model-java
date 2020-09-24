@@ -23,7 +23,7 @@ public class SudokuGamePlayTest {
     public void testFirstVeryHardGame() {
         SudokuGame game = SudokuGames.getVeryHardGames().get(0);
         
-        SudokuGameState state = new SudokuInitialState(game);
+        GameState state = new GameInitialState(game);
         assertFalse(state.isSolved());
         assertTrue(state.hasValidOptions());
         testGame(game);
@@ -43,7 +43,7 @@ public class SudokuGamePlayTest {
     	
         AutoPlayer player = new AutoPlayer(game);
         player.solve();
-        assertFalse(player.getBadGuesses().isEmpty());
+        //assertFalse(player.getBadGuesses().isEmpty());
         assertEquals("524639187637821594918574326792146853356982741841753962269318475185467239473295618", player.getCurrentStep().asNumberLine());
     }
     
@@ -60,13 +60,12 @@ public class SudokuGamePlayTest {
         assertFalse(player.isMovePossible(new Cell(1,1), 5));
         assertFalse(player.isMovePossible(new Cell(2,1), 5));
 
-        player.doAutoMove();
+        // start with two bad moves 
         player.doManualMove(new Cell(1, 1), 2);
         player.doManualMove(new Cell(1, 9), 8);
         player.solve();
         assertEquals("641938275978265341325417896783694152154372689269581734497123568532846917816759423", player.getCurrentStep().asNumberLine());
     }
-    
     
     public void testGames(List<SudokuGame> games) {
     	for(SudokuGame game : games) {

@@ -11,20 +11,26 @@ import java.util.stream.Collectors;
 /**
  * Created by jan on 16-04-17.
  */
-public abstract class SudokuGameState implements CellAccess {
+public abstract class GameState implements CellAccess {
 
     protected final Map<Cell, Set<Integer>> optionsPerCell;
 
-    public SudokuGameState(Map<Cell, Set<Integer>> optionsPerCell) {
+    public GameState(Map<Cell, Set<Integer>> optionsPerCell) {
         super();
         this.optionsPerCell = optionsPerCell;
     }
 
     public abstract SudokuGame getGame();
 
-    public abstract SudokuGameState getPreviousState();
+    public abstract GameState getPreviousState();
 
-    public abstract int valueAt(Cell cell);
+    public int valueAt(Cell cell) {
+        int val = getSolvedCells().getOrDefault(cell, -1);
+        if (val == -1) {
+            val = getGame().valueAt(cell);
+        }
+    	return val;
+    }
 
     public abstract Move getLastMove();
     
@@ -51,6 +57,14 @@ public abstract class SudokuGameState implements CellAccess {
     public boolean isPossibleMove(Cell c, int value) {
     	return optionsPerCell.containsKey(c) &&
     			optionsPerCell.get(c).contains(value);
+    }
+    
+    public boolean isInitialState() {
+    	return false;
+    }
+    
+    public boolean isBadMoveState() {
+    	return false;
     }
 
     public Board getBoard() {

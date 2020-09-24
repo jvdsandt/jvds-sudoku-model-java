@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class SudokuInitialState extends SudokuGameState {
+public class GameInitialState extends GameState {
 
     private final SudokuGame game;
 
-    public SudokuInitialState(SudokuGame game) {
+    public GameInitialState(SudokuGame game) {
         super(calcOptionsPerCell(game));
         this.game = game;
     }
@@ -27,7 +27,7 @@ public class SudokuInitialState extends SudokuGameState {
     }
 
     @Override
-    public SudokuGameState getPreviousState() {
+    public GameState getPreviousState() {
         throw new IllegalStateException("No previous state");
     }
     
@@ -39,5 +39,10 @@ public class SudokuInitialState extends SudokuGameState {
     @Override
     public Move getLastMove() {
         throw new IllegalStateException("No lastMove available");
+    }
+    
+    @Override
+    public boolean isInitialState() {
+    	return true;
     }
 }

@@ -11,18 +11,16 @@ public class AutoPlayer {
 
     private final SudokuGame game;
 
-    private List<SudokuGameState> steps;
-    private List<Move> badGuesses;
+    private List<GameState> steps;
 
     public AutoPlayer(SudokuGame game) {
         super();
         this.game = game;
         this.steps = new ArrayList<>();
-        this.steps.add(new SudokuInitialState(this.game));
-        this.badGuesses = new ArrayList<>();
+        this.steps.add(new GameInitialState(this.game));
     }
 
-    public SudokuGameState getCurrentStep() {
+    public GameState getCurrentStep() {
         return steps.get(steps.size()-1);
     }
 
@@ -38,22 +36,14 @@ public class AutoPlayer {
     	return getCurrentStep().isPossibleMove(c, value);
     }
     
-    public SudokuGameActiveState doManualMove(Cell c, int value) {
-    	var move = new Move(c, value, Reason.UNKNOWN);
-        var newState = new SudokuGameActiveState(getCurrentStep(), move);
+    public GameActiveState doManualMove(Cell c, int value) {
+    	var move = new Move(c, value, Reason.MANUAL);
+        var newState = new GameMoveState(getCurrentStep(), move);
        	steps.add(newState);
        	return newState;
     }
 
-    public List<Move> getBadGuesses() {
-		return badGuesses;
-	}
-    
-    public boolean hasBadGuesses() {
-    	return !badGuesses.isEmpty();
-    }
-
-	public SudokuGameActiveState doAutoMove() {
+	public GameActiveState doAutoMove() {
         var move = getCurrentStep().getFirstSingleOptionMove();
         if (move != null) {
             return processMove(move);
@@ -71,8 +61,8 @@ public class AutoPlayer {
 		}
 	}
 
-    private SudokuGameActiveState processMove(Move move) {
-        var newState = new SudokuGameActiveState(getCurrentStep(), move);
+    private GameActiveState processMove(Move move) {
+        var newState = new GameMoveState(getCurrentStep(), move);
         if (newState.hasValidOptions()) {
         	steps.add(newState);
         	return newState;
@@ -80,18 +70,17 @@ public class AutoPlayer {
         return goBackAndMove();
     }
 
-    private SudokuGameActiveState goBackAndMove() {
+    private GameActiveState goBackAndMove() {
         var state = getCurrentStep();
-        while (!state.getLastMove().canBeWrong()) {
+        while (state.isBadMoveState() || !state.getLastMove().canBeWrong()) {
             state = state.getPreviousState();
-        }
-        while (state.getLastMove().equals(state.getPreviousState().getLastMove())) {
-        	state = state.getPreviousState();
+            if (state.isInitialState()) {
+            	throw new InvalidGameException("Unsolvable game");
+            }
         }
         var invalidMove = state.getLastMove();
-        badGuesses.add(invalidMove);
         
-        SudokuGameState newState = new SudokuGameActiveState(state.getPreviousState(), state.getPreviousState().getLastMove(), invalidMove);
+        GameState newState = new GameBadMoveState(state.getPreviousState(), invalidMove);
         this.steps.add(newState);
         return doAutoMove();
     }
@@ -102,9 +91,6 @@ public class AutoPlayer {
     		var move = steps.get(i).getLastMove();
     		sb.append(steps.get(i).getSolvedCells().size()).append(" | ");
     		sb.append(move);
-    		if (badGuesses.contains(move)) {
-    			sb.append(" | BAD");
-    		}
     		sb.append("\n");
     	}
     	return sb.toString();

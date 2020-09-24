@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Move implements Comparable<Move> {
 
     enum Reason {
-        ONLY_OPTION, ONLY_PLACE, GUESS, UNKNOWN
+        ONLY_OPTION, ONLY_PLACE, GUESS, MANUAL
     }
 
     private final Cell cell;
