@@ -42,13 +42,13 @@ public abstract class GameState implements CellAccess {
         return optionsPerCell;
     }
 
-    public Set<Integer> getOptionsPerCell(Cell aCell) {
+    public Set<Integer> getOptions(Cell aCell) {
         return getOptionsPerCell().get(aCell);
     }
 
     public int numberOfCellsToSolve() {
         return optionsPerCell.size();
-    };
+    }
 
     public boolean isSolved() {
         return numberOfCellsToSolve() == 0;

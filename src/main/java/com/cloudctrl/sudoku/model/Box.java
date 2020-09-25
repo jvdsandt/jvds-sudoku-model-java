@@ -61,12 +61,8 @@ public class Box {
         if (!includes(cell)) {
             return true;
         }
-        for (Cell eachCell : cells) {
-            if (fixedCells.getOrDefault(eachCell, -1) == value) {
-                return false;
-            }
-        }
-        return true;
+        return !cells.stream()
+       		.anyMatch(eachCell -> fixedCells.getOrDefault(eachCell, -1) == value);
     }
 
     public void forCells(Collection<Cell> skipList, Consumer<Cell> action) {
@@ -87,7 +83,7 @@ public class Box {
         return result;
     }
 
-    public Stream<Move> findMoveStreams(Map<Cell, Set<Integer>> options) {
+    private Stream<Move> findMovesStream(Map<Cell, Set<Integer>> options) {
         Map<Integer, Set<Cell>> cellsPerValue = new HashMap<>();
         for (Cell eachCell : cells) {
             var values = options.getOrDefault(eachCell, Collections.emptySet());
@@ -107,10 +103,10 @@ public class Box {
     }
 
     public Move findMove(Map<Cell, Set<Integer>> options) {
-        return findMoveStreams(options).findFirst().orElse(null);
+        return findMovesStream(options).findFirst().orElse(null);
     }
 
     public Set<Move> findMoves(Map<Cell, Set<Integer>> options) {
-        return findMoveStreams(options).collect(Collectors.toSet());
+        return findMovesStream(options).collect(Collectors.toSet());
     }
 }

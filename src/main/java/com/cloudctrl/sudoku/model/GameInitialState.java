@@ -1,24 +1,12 @@
 package com.cloudctrl.sudoku.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 public class GameInitialState extends GameState {
 
     private final SudokuGame game;
 
     public GameInitialState(SudokuGame game) {
-        super(calcOptionsPerCell(game));
+        super(game.calcOptionsPerCell(game));
         this.game = game;
-    }
-
-    private static Map<Cell, Set<Integer>> calcOptionsPerCell(SudokuGame game) {
-        Map<Cell, Set<Integer>> map = new HashMap<>();
-        game.forOpenCells((eachCell) -> {
-            map.put(eachCell, game.getBoard().possibleValues(eachCell, game));
-        });
-        return map;
     }
 
     @Override

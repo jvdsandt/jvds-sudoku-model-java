@@ -55,8 +55,8 @@ public class SudokuGameTest extends TestCase {
         SudokuGame game = SudokuGames.SIMPLE_GAME;
         var state = new GameInitialState(game);
 
-        assertEquals(Set.of(3, 4, 5), state.getOptionsPerCell(new Cell(1, 1)));
-        assertEquals(Set.of(2, 5, 9), state.getOptionsPerCell(new Cell(9, 9)));
+        assertEquals(Set.of(3, 4, 5), state.getOptions(new Cell(1, 1)));
+        assertEquals(Set.of(2, 5, 9), state.getOptions(new Cell(9, 9)));
     }
 
 }

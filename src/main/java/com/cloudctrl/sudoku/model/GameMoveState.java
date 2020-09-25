@@ -14,7 +14,7 @@ public class GameMoveState extends GameActiveState {
        	if (!prevState.getOptionsPerCell().containsKey(move.getCell())) {
        		throw new IllegalArgumentException("Cell not open, invalid move: " + move);
        	}
-       	if (!prevState.getOptionsPerCell(move.getCell()).contains(move.getValue())) {
+       	if (!prevState.getOptions(move.getCell()).contains(move.getValue())) {
        		throw new IllegalArgumentException("Value not possible, invalid move: " + move);
        	}
         this.lastMove = move;

@@ -1,5 +1,7 @@
 package com.cloudctrl.sudoku.model;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.cloudctrl.sudoku.model.builder.SudokuGameBuilder;
@@ -14,7 +16,12 @@ public class SudokuGameBuilderTest {
     	var game = builder.newGame();
     	
         AutoPlayer player = new AutoPlayer(game);
-        player.solve();
+        try {
+        	player.solve();
+        	assertTrue("exception expected", false);
+        } catch (InvalidGameException ex) {
+        	// ok
+        }
     }
 
     @Test
