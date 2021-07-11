@@ -81,7 +81,7 @@ public class Board {
         boxes.forEach((eachBox) -> {
             if (eachBox.includes(cell)) {
                 eachBox.getCells().forEach((eachCell) -> {
-                    if (eachCell != cell && !(cellsSet.contains(eachCell))) {
+                    if (eachCell != cell) {
                         cellsSet.add(eachCell);
                     }
                 });

@@ -30,10 +30,15 @@ public class SudokuGamePlayTest {
     }
     
     @Test
-    public void testAllVeryHardGames() {
-    	testGames(SudokuGames.getVeryHardGames());
+    public void testAllHardGames() {
+    	testGames(SudokuGames.getHardGames());
     }
-    
+
+    @Test
+    public void testAllVeryHardGames() {
+        testGames(SudokuGames.getVeryHardGames());
+    }
+
     @Test
     public void testGameWithGuesses() {
     	

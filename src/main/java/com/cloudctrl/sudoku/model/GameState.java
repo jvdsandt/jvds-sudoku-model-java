@@ -125,16 +125,25 @@ public abstract class GameState implements CellAccess {
         Collections.sort(uniqueMoves);
         return uniqueMoves;
     }
-    
-    public Move takeGuess() {
+
+    public Cell firstCellWithFewestValues() {
         Cell cell = null;
-        Set<Integer> values = null;
+        int valuesCount = Integer.MAX_VALUE;
         for (var entry : optionsPerCell.entrySet()) {
-            if (!entry.getValue().isEmpty() && (values == null || values.size() > entry.getValue().size())) {
+            if (!entry.getValue().isEmpty() && (valuesCount > entry.getValue().size())) {
                 cell = entry.getKey();
-                values = entry.getValue();
+                valuesCount = entry.getValue().size();
+                if (valuesCount == 1) {
+                    return cell;
+                }
             }
         }
+        return cell;
+    }
+    
+    public Move takeGuess() {
+        var cell = firstCellWithFewestValues();
+        var values = optionsPerCell.get(cell);
         return new Move(cell, values.iterator().next(), Move.Reason.GUESS);
     }
     
