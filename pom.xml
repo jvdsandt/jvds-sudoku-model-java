@@ -15,6 +15,12 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
+    <scm>
+        <url>https://github.com/jvdsandt/jvds-sudoku-model-java</url>
+        <connection>scm:git:git@github.com:jvdsandt/jvds-sudoku-model-java.git</connection>
+        <developerConnection>scm:git:git@github.com:jvdsandt/jvds-sudoku-model-java.git</developerConnection>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
@@ -42,5 +48,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub jvdsandt Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/jvdsandt/m2repo</url>
+        </repository>
+    </distributionManagement>
 
 </project>
