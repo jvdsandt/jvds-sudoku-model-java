@@ -4,7 +4,7 @@
 
     <groupId>com.cloudctrl.sudoku</groupId>
     <artifactId>jvds-sudoku-model</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,7 +17,7 @@
         <url>https://github.com/jvdsandt/jvds-sudoku-model-java</url>
         <connection>scm:git:git@github.com:jvdsandt/jvds-sudoku-model-java.git</connection>
         <developerConnection>scm:git:git@github.com:jvdsandt/jvds-sudoku-model-java.git</developerConnection>
-      <tag>jvds-sudoku-model-0.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <build>
