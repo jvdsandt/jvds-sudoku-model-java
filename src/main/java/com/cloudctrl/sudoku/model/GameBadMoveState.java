@@ -10,12 +10,12 @@ public class GameBadMoveState extends GameActiveState {
     protected final Move badMove;
     
     private static Map<Cell, Set<Integer>> withoutBadMove(Map<Cell, Set<Integer>> options, Move badMove) {
-        var values = options.get(badMove.getCell());
-        if (values == null || !values.contains(badMove.getValue())) {
+        var values = options.get(badMove.cell());
+        if (values == null || !values.contains(badMove.value())) {
         	throw new IllegalArgumentException("Cannot process bad move " + badMove);
         }
         // remove the bad move as a valid option
-        options.put(badMove.getCell(), CollUtils.copyWithout(values, badMove.getValue()));
+        options.put(badMove.cell(), CollUtils.copyWithout(values, badMove.value()));
     	return options;
     }
 	

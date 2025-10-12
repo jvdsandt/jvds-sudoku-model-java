@@ -13,15 +13,7 @@ import java.util.stream.Stream;
 /**
  * Created by Jan on 14-8-2016.
  */
-public class Box {
-
-    private final String name;
-    private final Set<Cell> cells;
-
-    public Box(String name, Set<Cell> cells) {
-        this.name = name;
-        this.cells = Set.copyOf(cells);
-    }
+public record Box(String name, Set<Cell> cells) {
 
     public Box(String name, Cell minCell, Cell maxCell) {
         this(name, createCells(minCell, maxCell));
@@ -37,20 +29,12 @@ public class Box {
         return cells;
     }
 
-    public String getName() {
-		return name;
-	}
-
 	public int maxX() {
         return cells.stream().mapToInt(cell -> cell.x()).max().getAsInt();
     }
 
     public int maxY() {
         return cells.stream().mapToInt(cell -> cell.y()).max().getAsInt();
-    }
-
-    public Collection<Cell> getCells() {
-        return cells;
     }
 
     public boolean includes(Cell aCell) {

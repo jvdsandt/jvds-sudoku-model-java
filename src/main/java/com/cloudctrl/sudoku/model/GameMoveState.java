@@ -11,14 +11,14 @@ public class GameMoveState extends GameActiveState {
 	
     public GameMoveState(GameState prevState, Move move) {
         super(prevState.getBoard().processMove(prevState.getOptionsPerCell(), move), prevState);
-       	if (!prevState.getOptionsPerCell().containsKey(move.getCell())) {
+       	if (!prevState.getOptionsPerCell().containsKey(move.cell())) {
        		throw new IllegalArgumentException("Cell not open, invalid move: " + move);
        	}
-       	if (!prevState.getOptions(move.getCell()).contains(move.getValue())) {
+       	if (!prevState.getOptions(move.cell()).contains(move.value())) {
        		throw new IllegalArgumentException("Value not possible, invalid move: " + move);
        	}
         this.lastMove = move;
-        this.solvedCells = CollUtils.copyWith(prevState.getSolvedCells(), move.getCell(), move.getValue());
+        this.solvedCells = CollUtils.copyWith(prevState.getSolvedCells(), move.cell(), move.value());
     }
     
     @Override

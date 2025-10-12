@@ -61,7 +61,7 @@ public class Board {
     public void forRelevantCells(Consumer<Cell> action) {
         var cellSet = new HashSet<>();
         forBoxes(eachBox -> {
-            eachBox.getCells().forEach(eachCell -> {
+            eachBox.cells().forEach(eachCell -> {
                 if (!cellSet.contains(eachCell)) {
                     action.accept(eachCell);
                     cellSet.add(eachCell);
@@ -72,7 +72,7 @@ public class Board {
 
     public Set<Cell> getRelevantCells() {
         var cellSet = new HashSet<Cell>();
-        forBoxes(eachBox -> cellSet.addAll(eachBox.getCells()));
+        forBoxes(eachBox -> cellSet.addAll(eachBox.cells()));
         return cellSet;
     }
 
@@ -80,7 +80,7 @@ public class Board {
         var cellsSet = new HashSet<Cell>();
         boxes.forEach((eachBox) -> {
             if (eachBox.includes(cell)) {
-                eachBox.getCells().forEach((eachCell) -> {
+                eachBox.cells().forEach((eachCell) -> {
                     if (eachCell != cell) {
                         cellsSet.add(eachCell);
                     }
@@ -101,11 +101,11 @@ public class Board {
     }
 
     public Map<Cell, Set<Integer>> processMove(Map<Cell, Set<Integer>> optionsPerCell, Move move) {
-        var newOptions = CollUtils.copyWithout(optionsPerCell, move.getCell());
-        for (Cell c : cellsSharingBox(move.getCell())) {
+        var newOptions = CollUtils.copyWithout(optionsPerCell, move.cell());
+        for (Cell c : cellsSharingBox(move.cell())) {
             var values = newOptions.get(c);
             if (values != null) {
-                newOptions.put(c, CollUtils.copyWithout(values, move.getValue()));
+                newOptions.put(c, CollUtils.copyWithout(values, move.value()));
             }
         }
         return newOptions;

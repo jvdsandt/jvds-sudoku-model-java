@@ -117,9 +117,9 @@ public abstract class GameState implements CellAccess {
         var cells = new HashSet<Cell>();
         var uniqueMoves = new ArrayList<Move>();
         for (Move m : moves) {
-        	if (!cells.contains(m.getCell())) {
+        	if (!cells.contains(m.cell())) {
         		uniqueMoves.add(m);
-        		cells.add(m.getCell());
+        		cells.add(m.cell());
         	}
         }
         Collections.sort(uniqueMoves);
